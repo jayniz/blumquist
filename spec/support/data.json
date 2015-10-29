@@ -1,11 +1,11 @@
 {
-  "name": "Ronny Rockel",
-  "shipping_address": {
+  "name": "Moviepilot, Inc.",
+  "current_address": {
     "street_address": "Friedrichstr. 58",
     "city": "Berlin",
     "state": "Berlin"
   },
-  "other_addresses": [
+  "old_addresses": [
     {
       "street_address": "Mehringdamm 33",
       "city": "Berlin",

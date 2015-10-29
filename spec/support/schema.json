@@ -17,7 +17,7 @@
 
   "properties": {
     "name": { "type": "string" },
-    "shipping_address": { "$ref": "#/definitions/address" },
-    "other_addresses": { "type": "array", "items": { "$ref": "#/definitions/address"   } }
+    "current_address": { "$ref": "#/definitions/address" },
+    "old_addresses": { "type": "array", "items": { "$ref": "#/definitions/address"   } }
   }
 }

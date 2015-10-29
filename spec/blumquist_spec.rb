@@ -13,15 +13,15 @@ describe Blumquist do
     let(:b){ Blumquist.new(schema, data) }
 
     it "has getters for direct properties" do
-      expect(b.name).to eq "Ronny Rockel"
+      expect(b.name).to eq "Moviepilot, Inc."
     end
 
     it "has getters for sub-objects" do
-      expect(b.shipping_address.city).to eq "Berlin"
+      expect(b.current_address.city).to eq "Berlin"
     end
 
     it "has getters for sub-arrays" do
-      expect(b.other_addresses.last.street_address).to eq "Blücherstraße 22"
+      expect(b.old_addresses[1].street_address).to eq "Blücherstraße 22"
     end
 
   end
