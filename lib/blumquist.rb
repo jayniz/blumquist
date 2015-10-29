@@ -6,13 +6,14 @@ require 'json'
 class Blumquist
   def initialize(schema, data)
     # Poor man's deep clone: json 🆗 🆒
-    @data = JSON.parse(data.to_json).with_indifferent_access
+    @data = JSON.parse(data.to_json)
     @schema = schema.with_indifferent_access
 
     validate_schema
     resolve_json_pointers
-
     define_getters
+  rescue
+    binding.pry
   end
 
   private 
@@ -81,16 +82,20 @@ class Blumquist
   end
 
   def blumquistify_object(property)
-    sub_schema = {
-      definitions: @schema[:definitions],
-      type: 'object',
-      properties: @schema[:properties][property][:properties]
-    }
+    sub_schema = @schema[:properties][property].merge(
+      definitions: @schema[:definitions]
+    )
     @data[property] = Blumquist.new(sub_schema, @data[property])
   end
 
   def blumquistify_array(property)
+    item_schema = resolve_json_pointer!(@schema[:properties][property][:items])
+    sub_schema = item_schema.merge(
+      definitions: @schema[:definitions]
+    )
+    @data[property] ||= []
     @data[property] = @data[property].map do |item|
+      Blumquist.new(sub_schema, item)
     end
   end
 end

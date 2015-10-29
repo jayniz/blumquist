@@ -20,5 +20,9 @@ describe Blumquist do
       expect(b.shipping_address.city).to eq "Berlin"
     end
 
+    it "has getters for sub-arrays" do
+      expect(b.other_addresses.last.street_address).to eq "Blücherstraße 22"
+    end
+
   end
 end

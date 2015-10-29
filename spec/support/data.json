@@ -4,5 +4,17 @@
     "street_address": "Friedrichstr. 58",
     "city": "Berlin",
     "state": "Berlin"
-  }
+  },
+  "other_addresses": [
+    {
+      "street_address": "Mehringdamm 33",
+      "city": "Berlin",
+      "state": "Berlin"
+    },
+    {
+      "street_address": "Blücherstraße 22",
+      "city": "Berlin",
+      "state": "Berlin"
+    }
+  ]
 }
