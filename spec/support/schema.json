@@ -16,7 +16,7 @@
   "type": "object",
 
   "properties": {
-    "billing_address": { "$ref": "#/definitions/address" },
+    "name": { "type": "string" },
     "shipping_address": { "$ref": "#/definitions/address" }
   }
 }

@@ -1,3 +1,3 @@
-class Bumquist
+class Blumquist
   VERSION = "0.1.0"
 end

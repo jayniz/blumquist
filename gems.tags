@@ -392,6 +392,8 @@ BlockCalled	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/tzinfo-1.2.2/test/tc_timezon
 BlockCommand	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/pry-0.10.3/lib/pry/command.rb	/^  class BlockCommand < Command$/;"	c
 BlockExpectationTarget	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-expectations-3.3.1/lib/rspec/expectations/expectation_target.rb	/^    class BlockExpectationTarget < ExpectationTarget$/;"	c	class:RSpec.Expectations
 BlockSignature	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-support-3.3.0/lib/rspec/support/method_signature_verifier.rb	/^    class BlockSignature < MethodSignature$/;"	c	class:RSpec.Support
+Blumquist	/Users/jannis/Dev/core/bumquist/lib/blumquist.rb	/^class Blumquist$/;"	c
+Blumquist	/Users/jannis/Dev/core/bumquist/lib/blumquist/version.rb	/^class Blumquist$/;"	c
 BooleanMatcher	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-mocks-3.3.2/lib/rspec/mocks/argument_matchers.rb	/^      class BooleanMatcher < SingletonMatcher$/;"	c	class:RSpec.Mocks.ArgumentMatchers
 BoringVendorProvidedCLI	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/thor-0.19.1/spec/register_spec.rb	/^class BoringVendorProvidedCLI < Thor$/;"	c
 Buenos_Aires	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/tzinfo-1.2.2/test/tzinfo-data/tzinfo/data/definitions/America/Argentina/Buenos_Aires.rb	/^          module Buenos_Aires$/;"	m	class:TZInfo.Data.Definitions.America.Argentina
@@ -428,8 +430,6 @@ BuiltIn	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-expectations-3.3.1/lib/rsp
 BuiltIn	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-expectations-3.3.1/lib/rspec/matchers/built_in/start_or_end_with.rb	/^    module BuiltIn$/;"	m	class:RSpec.Matchers
 BuiltIn	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-expectations-3.3.1/lib/rspec/matchers/built_in/throw_symbol.rb	/^    module BuiltIn$/;"	m	class:RSpec.Matchers
 BuiltIn	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-expectations-3.3.1/lib/rspec/matchers/built_in/yield.rb	/^    module BuiltIn$/;"	m	class:RSpec.Matchers
-Bumquist	/Users/jannis/Dev/core/bumquist/lib/bumquist.rb	/^class Bumquist$/;"	c
-Bumquist	/Users/jannis/Dev/core/bumquist/lib/bumquist/version.rb	/^class Bumquist$/;"	c
 Bundler	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/guard-2.13.0/lib/guard/cli/environments/bundler.rb	/^      class Bundler$/;"	c	class:Guard.Cli.Environments
 Bundler	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/guard-bundler-2.1.0/lib/guard/bundler.rb	/^  class Bundler < Plugin$/;"	c	class:Guard
 Bundler	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/guard-bundler-2.1.0/lib/guard/bundler/notifier.rb	/^  class Bundler < Plugin$/;"	c	class:Guard
@@ -4705,6 +4705,8 @@ block_matches?	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-expectations-3.3.1/
 block_token	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/coderay-1.1.0/lib/coderay/encoders/statistic.rb	/^    def block_token action, kind$/;"	f	class:CodeRay.Encoders.Statistic.finish
 blocking_flag_for_editor	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/pry-0.10.3/lib/pry/editor.rb	/^    def blocking_flag_for_editor(blocking)$/;"	f	class:Pry
 blue	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-support-3.3.0/lib/rspec/support/differ.rb	/^      def blue(text)$/;"	f	class:RSpec.Support.Differ
+blumquistify_array	/Users/jannis/Dev/core/bumquist/lib/blumquist.rb	/^  def blumquistify_array(property)$/;"	f	class:Blumquist
+blumquistify_object	/Users/jannis/Dev/core/bumquist/lib/blumquist.rb	/^  def blumquistify_object(property)$/;"	f	class:Blumquist
 bold	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/pry-0.10.3/lib/pry/helpers/text.rb	/^        def bold(text)$/;"	f	class:Pry.Helpers
 bold	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-core-3.3.2/lib/rspec/core/formatters/profile_formatter.rb	/^        def bold(text)$/;"	f	class:RSpec.Core.Formatters.ProfileFormatter
 boolean	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-mocks-3.3.2/lib/rspec/mocks/argument_matchers.rb	/^      def boolean$/;"	f	class:RSpec.Mocks.ArgumentMatchers
@@ -5634,7 +5636,8 @@ define_callbacks	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/activesupport-4.2.4/lib
 define_derived_metadata	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-core-3.3.2/lib/rspec/core/configuration.rb	/^      def define_derived_metadata(*filters, &block)$/;"	f	class:RSpec.Core.Configuration.spec_files_with_failures
 define_example_group_method	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-core-3.3.2/lib/rspec/core/example_group.rb	/^      def self.define_example_group_method(name, metadata={})$/;"	F	class:RSpec.Core.ExampleGroup
 define_example_method	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-core-3.3.2/lib/rspec/core/example_group.rb	/^      def self.define_example_method(name, extra_options={})$/;"	F	class:RSpec.Core.ExampleGroup
-define_getters	/Users/jannis/Dev/core/bumquist/lib/bumquist.rb	/^  def define_getters$/;"	f	class:Bumquist
+define_getter	/Users/jannis/Dev/core/bumquist/lib/blumquist.rb	/^  def define_getter(property)$/;"	f	class:Blumquist
+define_getters	/Users/jannis/Dev/core/bumquist/lib/blumquist.rb	/^  def define_getters$/;"	f	class:Blumquist
 define_helpers_on	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-core-3.3.2/lib/rspec/core/memoized_helpers.rb	/^      def self.define_helpers_on(example_group)$/;"	F	class:RSpec
 define_loop	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/thread_safe-0.3.5/test/test_cache_loops.rb	/^  def define_loop(name, body, prelude)$/;"	f	class:TestCacheTorture.run_thread_loop
 define_matcher	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-mocks-3.3.2/lib/rspec/mocks/targets.rb	/^      def define_matcher(matcher, name, &block)$/;"	f	class:RSpec.Mocks.TargetBase
@@ -8186,7 +8189,7 @@ initialize	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bun
 initialize	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/vendor/thor/lib/thor/shell/basic.rb	/^      def initialize #:nodoc:$/;"	f	class:Bundler.Shell.Basic
 initialize	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/worker.rb	/^      def initialize(exn)$/;"	f	class:Bundler.Worker.WrappedException
 initialize	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/worker.rb	/^    def initialize(size, func)$/;"	f	class:Bundler.Worker
-initialize	/Users/jannis/Dev/core/bumquist/lib/bumquist.rb	/^  def initialize(schema, data)$/;"	f	class:Bumquist
+initialize	/Users/jannis/Dev/core/bumquist/lib/blumquist.rb	/^  def initialize(schema, data)$/;"	f	class:Blumquist
 initialize_added	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/thor-0.19.1/lib/thor.rb	/^    def initialize_added #:nodoc:$/;"	f	class:printable_commands
 initialize_added	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/thor-0.19.1/lib/thor/base.rb	/^      def initialize_added #:nodoc:$/;"	f	class:Thor
 initialize_added	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/vendor/thor/lib/thor.rb	/^    def initialize_added #:nodoc:$/;"	f	class:printable_commands
@@ -9905,6 +9908,7 @@ pride	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/minitest-5.8.2/lib/minitest/pride_
 pride	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/minitest-5.8.2/lib/minitest/pride_plugin.rb	/^    def self.pride!$/;"	F	class:PrideIO
 pride	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/minitest-5.8.2/lib/minitest/pride_plugin.rb	/^    def self.pride?$/;"	F	class:PrideIO
 primary_candidate	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/pry-0.10.3/lib/pry/wrapped_module.rb	/^    def primary_candidate$/;"	f
+primitive_type?	/Users/jannis/Dev/core/bumquist/lib/blumquist.rb	/^  def primitive_type?(type)$/;"	f	class:Blumquist
 print	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/minitest-5.8.2/lib/minitest/pride_plugin.rb	/^    def print o$/;"	f	class:PrideIO
 print	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/pry-0.10.3/lib/pry/output.rb	/^    def print(*objs)$/;"	f	class:Pry.Output
 print	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/pry-0.10.3/lib/pry/pager.rb	/^    def print(str)$/;"	f	class:Pry.NullPager
@@ -10577,6 +10581,7 @@ resolve	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundle
 resolve	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/vendor/molinillo/lib/molinillo/resolution.rb	/^      def resolve$/;"	f	class:Bundler.Resolver.Resolution
 resolve	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/vendor/molinillo/lib/molinillo/resolver.rb	/^    def resolve(requested, base = DependencyGraph.new)$/;"	f	class:Bundler.Resolver
 resolve_expected_args_based_on	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-mocks-3.3.2/lib/rspec/mocks/argument_list_matcher.rb	/^      def resolve_expected_args_based_on(actual_args)$/;"	f	class:RSpec.Mocks.ArgumentListMatcher
+resolve_json_pointer!	/Users/jannis/Dev/core/bumquist/lib/blumquist.rb	/^  def resolve_json_pointer!(type_def)$/;"	f	class:Blumquist
 resolve_link	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/i18n-0.7.0/lib/i18n/backend/flatten.rb	/^        def resolve_link(locale, key)$/;"	f	class:I18n.Backend.Flatten
 resolve_name	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/cli/gem.rb	/^    def resolve_name(name)$/;"	f	class:Bundler.CLI
 resolve_remotely!	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/definition.rb	/^    def resolve_remotely!$/;"	f	class:Bundler.Definition
@@ -13453,6 +13458,7 @@ validate_id	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/coderay-1.1.0/lib/coderay/he
 validate_keys	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/dsl.rb	/^    def validate_keys(command, opts, valid_keys)$/;"	f	class:Bundler
 validate_options_hash!	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/thread_safe-0.3.5/lib/thread_safe/cache.rb	/^    def validate_options_hash!(options)$/;"	f	class:Cache
 validate_ruby!	/Users/jannis/.rvm/gems/ruby-2.2.1@global/gems/bundler-1.10.6/lib/bundler/definition.rb	/^    def validate_ruby!$/;"	f	class:Bundler.Definition
+validate_schema	/Users/jannis/Dev/core/bumquist/lib/blumquist.rb	/^  def validate_schema$/;"	f	class:Blumquist
 validate_zoneinfo_dir	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/tzinfo-1.2.2/lib/tzinfo/zoneinfo_data_source.rb	/^    def validate_zoneinfo_dir(path, iso3166_tab_path = nil)$/;"	f	class:TZInfo.ZoneinfoDataSource
 validation_for_fit	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/minitest-5.8.2/lib/minitest/benchmark.rb	/^    def validation_for_fit msg, threshold$/;"	f	class:Minitest.Benchmark
 validity_message	/Users/jannis/.rvm/gems/ruby-2.2.1/gems/rspec-expectations-3.3.1/lib/rspec/matchers/built_in/be.rb	/^        def validity_message$/;"	f	class:RSpec.Matchers.BuiltIn.BePredicate
