@@ -21,7 +21,7 @@ describe Blumquist do
     end
 
     it "has getters for sub-arrays" do
-      expect(b.old_addresses[1].street_address).to eq "Blücherstraße 22"
+      expect(b.old_addresses[1].street_address).to eq "Bluecherstr. 22"
     end
 
   end
