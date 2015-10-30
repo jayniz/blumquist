@@ -1,4 +1,3 @@
-require 'pry'
 require "blumquist/version"
 require 'active_support/core_ext/hash/indifferent_access'
 require 'json'
@@ -12,8 +11,6 @@ class Blumquist
     validate_schema
     resolve_json_pointers
     define_getters
-  rescue
-    binding.pry
   end
 
   private 
