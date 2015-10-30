@@ -1,26 +1,32 @@
 require "blumquist/version"
 require 'active_support/core_ext/hash/indifferent_access'
 require 'json'
+require 'json-schema'
 
 class Blumquist
-  def initialize(schema, data)
+  def initialize(options)
     # Poor man's deep clone: json 🆗 🆒
-    @data = JSON.parse(data.to_json)
-    @schema = schema.with_indifferent_access
+    @data = JSON.parse(options.fetch(:data).to_json)
+    @schema = options.fetch(:schema).with_indifferent_access
+    @validate = options.fetch(:validate, true)
 
     validate_schema
+    validate_data
+
     resolve_json_pointers
     define_getters
   end
 
   private 
 
+  def validate_data
+    return unless @validate
+    JSON::Validator.validate!(@schema, @data)
+  end
+
   def validate_schema
     if @schema[:type] != 'object'
       raise "Can only deal with 'object' types, not '#{@schema[:type]}'"
-    end
-    unless @schema[:properties].is_a?(Hash)
-      raise "Properties are a #{@schema[:properties].class.name}, not a Hash"
     end
   end
 
@@ -82,7 +88,7 @@ class Blumquist
     sub_schema = @schema[:properties][property].merge(
       definitions: @schema[:definitions]
     )
-    @data[property] = Blumquist.new(sub_schema, @data[property])
+    @data[property] = Blumquist.new(schema: sub_schema, data: @data[property], validate: @validate)
   end
 
   def blumquistify_array(property)
@@ -92,7 +98,7 @@ class Blumquist
     )
     @data[property] ||= []
     @data[property] = @data[property].map do |item|
-      Blumquist.new(sub_schema, item)
+      Blumquist.new(schema: sub_schema, data: item, validate: @validate)
     end
   end
 end

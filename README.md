@@ -68,19 +68,22 @@ data = {
 ... an object with getters for all properties defined in the schema
 
 ```ruby
-> b = Blumquist.new(schema, data)
-=> #<Blumquist:0x....>
+> b = Blumquist.new(schema: schema, data: data)
+=> #<Blumquist:0x0....>
 > b.name
 => "Moviepilot, Inc."
 > b.old_addresses.first.street
 => "Blücherstr. 22"
 ```
 
-## TODO
+### Validation
 
-- Put it to use, fix bugs
-- Validate data against schema and reject invalid data
+By default, Blumquist will validate the data. If you don't want that to happen, do as follows:
 
+```ruby
+> b = Blumquist.new(schema: schema, data: data, validate: false)
+=> ...
+```
 
 ## Installation
 
