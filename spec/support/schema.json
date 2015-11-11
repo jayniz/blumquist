@@ -18,6 +18,9 @@
   "properties": {
     "name": { "type": "string" },
     "current_address": { "$ref": "#/definitions/address" },
-    "old_addresses": { "type": "array", "items": { "$ref": "#/definitions/address"   } }
+    "old_addresses": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/address"}
+    }
   }
 }

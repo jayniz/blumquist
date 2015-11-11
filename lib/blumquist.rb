@@ -2,6 +2,7 @@ require "blumquist/version"
 require 'active_support/core_ext/hash/indifferent_access'
 require 'json'
 require 'json-schema'
+require 'blumquist/errors'
 
 class Blumquist
   def initialize(options)
@@ -17,7 +18,7 @@ class Blumquist
     define_getters
   end
 
-  private 
+  private
 
   def validate_data
     return unless @validate
@@ -25,15 +26,14 @@ class Blumquist
   end
 
   def validate_schema
-    if @schema[:type] != 'object'
-      raise "Can only deal with 'object' types, not '#{@schema[:type]}'"
-    end
+    return if @schema[:type] == 'object'
+    raise(Errors::UnsupportedType, @schema[:type])
   end
 
   def resolve_json_pointers
     @schema[:properties].each do |property, type_def|
       next unless type_def[:$ref]
-      resolve_json_pointer!(type_def) 
+      resolve_json_pointer!(type_def)
     end
   end
 
@@ -43,7 +43,7 @@ class Blumquist
     key = pointer.split('/').last
     definition = @schema[:definitions][key]
 
-    raise "Can't resolve pointer #{pointer}" unless definition
+    raise(Errors::InvalidPointer, pointer) unless definition
 
     type_def.merge! definition
   end
@@ -68,7 +68,7 @@ class Blumquist
 
       # We don't know what to do, so let's panic
       else
-        raise "Can't handle type '#{type_def}' yet, I'm sorry"
+        raise(Errors::UnsupportedType, type_def[:type])
       end
 
       # And define the getter
@@ -77,7 +77,7 @@ class Blumquist
   end
 
   def define_getter(property)
-    self.class.class_eval do 
+    self.class.class_eval do
       define_method(property) do
         @data[property]
       end
@@ -93,6 +93,7 @@ class Blumquist
 
   def blumquistify_array(property)
     item_schema = resolve_json_pointer!(@schema[:properties][property][:items])
+    raise(Errors::MissingArrayItemsType, @schema[:properties][property]) unless item_schema
     sub_schema = item_schema.merge(
       definitions: @schema[:definitions]
     )
