@@ -1,4 +1,4 @@
-# Blumquist [![Circle CI](https://circleci.com/gh/moviepilot/blumquist/tree/master.svg?style=svg)](https://circleci.com/gh/moviepilot/blumquist/tree/master) [![Coverage Status](https://coveralls.io/repos/moviepilot/blumquist/badge.svg?branch=master&service=github)](https://coveralls.io/github/moviepilot/blumquist?branch=master)
+# Blumquist [![Circle CI](https://circleci.com/gh/moviepilot/blumquist/tree/master.svg?style=svg)](https://circleci.com/gh/moviepilot/blumquist/tree/master) [![Coverage Status](https://coveralls.io/repos/moviepilot/blumquist/badge.svg?branch=master&service=github)](https://coveralls.io/github/moviepilot/blumquist?branch=master) [![Gem Version](https://badge.fury.io/rb/blumquist.svg)](https://badge.fury.io/rb/blumquist)
 
 ![](https://dl.dropboxusercontent.com/u/1953503/blumquist.jpg)
 
