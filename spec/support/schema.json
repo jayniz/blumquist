@@ -20,7 +20,7 @@
     "current_address": { "$ref": "#/definitions/address" },
     "old_addresses": {
       "type": "array",
-      "items": { "$ref": "#/definitions/address"}
+      "items": [{ "$ref": "#/definitions/address"}]
     }
   }
 }

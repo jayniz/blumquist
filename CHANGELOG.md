@@ -1,3 +1,7 @@
+# 0.3.1
+- support array type definitions that are expressed as an object
+  or as an array of objects
+
 # 0.3.0
 - important whitespace changes
 - proper exceptions

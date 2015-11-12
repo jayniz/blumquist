@@ -92,7 +92,18 @@ class Blumquist
   end
 
   def blumquistify_array(property)
-    item_schema = resolve_json_pointer!(@schema[:properties][property][:items])
+    # We only support arrays with one type defined, either through
+    #
+    #     "type": "array",
+    #     "items": { "$ref": "#/definitions/mytype" }
+    #
+    # or through
+    #
+    #     "type": "array",
+    #     "items": [{ "$ref": "#/definitions/mytype" }]
+    #
+    pointer = [@schema[:properties][property][:items]].flatten.first
+    item_schema = resolve_json_pointer!(pointer)
     raise(Errors::MissingArrayItemsType, @schema[:properties][property]) unless item_schema
     sub_schema = item_schema.merge(
       definitions: @schema[:definitions]
