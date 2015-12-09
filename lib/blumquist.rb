@@ -102,15 +102,31 @@ class Blumquist
     #     "type": "array",
     #     "items": [{ "$ref": "#/definitions/mytype" }]
     #
-    pointer = [@schema[:properties][property][:items]].flatten.first
-    item_schema = resolve_json_pointer!(pointer)
-    raise(Errors::MissingArrayItemsType, @schema[:properties][property]) unless item_schema
-    sub_schema = item_schema.merge(
-      definitions: @schema[:definitions]
-    )
-    @data[property] ||= []
-    @data[property] = @data[property].map do |item|
-      Blumquist.new(schema: sub_schema, data: item, validate: @validate)
+    # or through
+    #
+    #     "type": "array",
+    #     "items": [{ "type": "number" }]
+    #
+    type_def = [@schema[:properties][property][:items]].flatten.first
+
+    # The items of this array are defined by a pointer
+    if type_def[:$ref]
+      item_schema = resolve_json_pointer!(type_def)
+      raise(Errors::MissingArrayItemsType, @schema[:properties][property]) unless item_schema
+
+      sub_schema = item_schema.merge(
+        definitions: @schema[:definitions]
+      )
+
+      @data[property] ||= []
+      @data[property] = @data[property].map do |item|
+        Blumquist.new(schema: sub_schema, data: item, validate: @validate)
+      end
+    elsif primitive_type?(type_def[:type])
+
+    # We don't know what to do, so let's panic
+    else
+      raise(Errors::UnsupportedType, type_def[:type])
     end
   end
 end

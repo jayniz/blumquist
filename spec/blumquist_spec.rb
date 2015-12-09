@@ -16,12 +16,16 @@ describe Blumquist do
       expect(b.name).to eq "Moviepilot, Inc."
     end
 
-    it "has getters for sub-objects" do
+    it "has getters for non primitive properties" do
       expect(b.current_address.city).to eq "Berlin"
     end
 
-    it "has getters for sub-arrays" do
+    it "has getters for arrays of non primitives" do
       expect(b.old_addresses[1].street_address).to eq "Bluecherstr. 22"
+    end
+
+    it "has getters for arrays of primitives" do
+      expect(b.phone_numbers[0]).to eq 5551234
     end
 
     context "validation" do

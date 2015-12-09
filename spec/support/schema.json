@@ -17,6 +17,10 @@
 
   "properties": {
     "name": { "type": "string" },
+    "phone_numbers": {
+      "type": "array",
+      "items": [{ "type": "number" }]
+    },
     "current_address": { "$ref": "#/definitions/address" },
     "old_addresses": {
       "type": "array",
