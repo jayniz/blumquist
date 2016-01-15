@@ -85,6 +85,8 @@ class Blumquist
   end
 
   def blumquistify_object(property)
+    return unless @data[property]
+
     sub_schema = @schema[:properties][property].merge(
       definitions: @schema[:definitions]
     )
