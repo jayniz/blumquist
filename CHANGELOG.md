@@ -1,15 +1,19 @@
+# 0.4.0
+- Support properties with multiple types
+  (e.g. an object, but also null)
+
 # 0.3.2
-- fix #2 (arrays of primitives)
+- Fix #2 (arrays of primitives)
 
 # 0.3.1
-- support array type definitions that are expressed as an object
+- Support array type definitions that are expressed as an object
   or as an array of objects
 
 # 0.3.0
-- important whitespace changes
-- proper exceptions
-- disallow arrays with undefined item types
+- Important whitespace changes
+- Proper exceptions
+- Disallow arrays with undefined item types
 
 # 0.2.0 (Oct-30-15)
-- validate objects (if desired)
-- use keyword arguments (in <2.0 compat mode)
+- Validate objects (if desired)
+- Use keyword arguments (in <2.0 compat mode)
