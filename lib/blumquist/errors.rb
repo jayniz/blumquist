@@ -1,3 +1,7 @@
+require 'blumquist/error'
+require 'blumquist/errors/unsupported_schema'
 require 'blumquist/errors/unsupported_type'
 require 'blumquist/errors/invalid_pointer'
-require 'blumquist/errors/unsupported_type'
+require 'blumquist/errors/missing_array_items_type'
+require 'blumquist/errors/missing_properties'
+require 'blumquist/errors/no_compatible_one_of'

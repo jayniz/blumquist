@@ -1,8 +1,8 @@
 class Blumquist
   module Errors
-    class UnsupportedType < RuntimeError
+    class UnsupportedType < Blumquist::Error
       def initialize(type)
-        super("Only null, boolean, number, string, array and object types are supported. Unsupported type #{type.to_s.to_json}")
+        super("Unsupported type '#{type.to_s}' (#{%w{null, boolean, number, string, array object}.to_json} are supported)")
       end
     end
   end
