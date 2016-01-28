@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe Blumquist do
@@ -28,8 +29,22 @@ describe Blumquist do
       expect(b.phone_numbers[0]).to eq 5551234
     end
 
+    context "oneOf expressions" do
+      it "with inline objects" do
+        data = {"current_address" => { "planet" => "οὐρανός" }}
+        blumquist = Blumquist.new(schema: schema, data: data)
+        expect(blumquist.current_address.planet).to eq "οὐρανός"
+      end
+
+      it "with null objects" do
+        data = {"current_address" => nil}
+        blumquist = Blumquist.new(schema: schema, data: data)
+        expect(blumquist.current_address).to be_nil
+      end
+    end
+
     context "validation" do
-      let(:invalid_data){ 
+      let(:invalid_data){
         invalid = JSON.parse(data.to_json)
         invalid['name'] = 1
         invalid
@@ -37,7 +52,7 @@ describe Blumquist do
 
       it "is on by default" do
         expect{
-          Blumquist.new(schema: schema, data: invalid_data) 
+          Blumquist.new(schema: schema, data: invalid_data)
         }.to raise_error(JSON::Schema::ValidationError)
       end
 

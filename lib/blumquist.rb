@@ -1,4 +1,4 @@
-require "blumquist/version"
+require 'blumquist/version'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'json'
 require 'json-schema'
@@ -27,7 +27,7 @@ class Blumquist
 
   def validate_schema
     return if @schema[:type] == 'object'
-    raise(Errors::UnsupportedType, @schema[:type])
+    raise(Errors::UnsupportedSchema, type: @schema[:type])
   end
 
   def resolve_json_pointers
@@ -54,21 +54,28 @@ class Blumquist
 
   def define_getters
     @schema[:properties].each do |property, type_def|
+      types = [type_def[:type]].flatten - ["null"]
+      type = types.first
+
+      # The type_def can contain one or more types.
+      # We only support single types, or one
+      # normal type and the null type.
+      raise(Errors::UnsupportedType, type_def[:type]) if types.length > 1
 
       # Wrap objects recursively
-      if type_def[:type] == 'object'
+      if type == 'object' || type_def[:oneOf]
         blumquistify_object(property)
 
       # Turn array elements into Blumquists
-      elsif type_def[:type] == 'array'
+      elsif type == 'array'
         blumquistify_array(property)
 
       # Nothing to do for primitive values
-      elsif primitive_type?(type_def[:type])
+      elsif primitive_type?(type)
 
       # We don't know what to do, so let's panic
       else
-        raise(Errors::UnsupportedType, type_def[:type])
+        raise(Errors::UnsupportedType, type)
       end
 
       # And define the getter
@@ -88,7 +95,66 @@ class Blumquist
     sub_schema = @schema[:properties][property].merge(
       definitions: @schema[:definitions]
     )
-    @data[property] = Blumquist.new(schema: sub_schema, data: @data[property], validate: @validate)
+
+    # If properties are defined directly, like this:
+    #
+    #     { "type": "object", "properties": { ... } }
+    #
+    if sub_schema[:properties]
+      sub_blumquist = Blumquist.new(schema: sub_schema, data: @data[property], validate: @validate)
+      @data[property] = sub_blumquist
+      return
+    end
+
+    # Properties not defined directly, object must be 'oneOf',
+    # like this:
+    #
+    #    { "type": "object", "oneOf": [{...}] }
+    #
+    # The json schema v4 draft specifies, that:
+    #
+    #    "the oneOf keyword is new in draft v4; its value is an array of schemas, and an instance is valid if and only if it is valid against exactly one of these schemas"
+    #
+    # *See: http://json-schema.org/example2.html
+    #
+    # That means we can just go through the oneOfs and return
+    # the first that matches:
+    if sub_schema[:oneOf]
+      primitive_allowed = false
+      sub_schema[:oneOf].each do |one|
+        begin
+          if primitive_type?(one[:type])
+            primitive_allowed = true
+          else
+            if one[:type]
+              schema = one.merge(definitions: @schema[:definitions])
+            else
+              schema = resolve_json_pointer!(one).merge(
+                definitions: @schema[:definitions]
+              )
+            end
+            @data[property] = Blumquist.new(data: @data[property], schema: schema)
+            return
+          end
+        rescue
+          # On to the next oneOf
+        end
+      end
+
+      # We found no matching object definition.
+      # If a primitve is part of the `oneOfs,
+      # that's no problem though.
+      return if primitive_allowed
+
+      # We didn't find a schema in oneOf that matches our data
+      raise(Errors::NoCompatibleOneOf, one_ofs: sub_schema[:oneOf], data: @data[property])
+
+      return
+    end
+
+    # If there's neither `properties` nor `oneOf`, we don't
+    # know what to do and shall panic:
+    raise(Errors::MissingProperties, sub_schema)
   end
 
   def blumquistify_array(property)
@@ -112,7 +178,6 @@ class Blumquist
     # The items of this array are defined by a pointer
     if type_def[:$ref]
       item_schema = resolve_json_pointer!(type_def)
-      raise(Errors::MissingArrayItemsType, @schema[:properties][property]) unless item_schema
 
       sub_schema = item_schema.merge(
         definitions: @schema[:definitions]
