@@ -54,21 +54,28 @@ class Blumquist
 
   def define_getters
     @schema[:properties].each do |property, type_def|
+      types = [type_def[:type]].flatten - ["null"]
+      type = types.first
+
+      # The type_def can contain one or more types.
+      # We only support single types, or one
+      # normal type and the null type.
+      raise(Errors::UnsupportedType, type_def[:type]) unless types.length == 1
 
       # Wrap objects recursively
-      if type_def[:type] == 'object'
+      if type == 'object'
         blumquistify_object(property)
 
       # Turn array elements into Blumquists
-      elsif type_def[:type] == 'array'
+      elsif type == 'array'
         blumquistify_array(property)
 
       # Nothing to do for primitive values
-      elsif primitive_type?(type_def[:type])
+      elsif primitive_type?(type)
 
       # We don't know what to do, so let's panic
       else
-        raise(Errors::UnsupportedType, type_def[:type])
+        raise(Errors::UnsupportedType, type)
       end
 
       # And define the getter

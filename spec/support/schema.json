@@ -7,7 +7,7 @@
       "properties": {
         "street_address": { "type": "string" },
         "city":           { "type": "string" },
-        "state":          { "type": "string" }
+        "state":          { "type": ["string", "null"] }
       },
       "required": ["street_address", "city", "state"]
     }
