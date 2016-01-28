@@ -7,7 +7,7 @@
       "properties": {
         "street_address": { "type": "string" },
         "city":           { "type": "string" },
-        "state":          { "type": "string" }
+        "state":          { "type": ["string", "null"] }
       },
       "required": ["street_address", "city", "state"]
     }
@@ -21,7 +21,19 @@
       "type": "array",
       "items": [{ "type": "number" }]
     },
-    "current_address": { "$ref": "#/definitions/address" },
+    "current_address": {
+      "oneOf": [
+        { "type": "null" },
+        {"$ref": "#/definitions/address" },
+        {
+          "type": "object",
+          "properties": {
+            "planet": { "type" : "string" }
+          },
+          "required": ["planet"]
+        }
+      ]
+    },
     "old_addresses": {
       "type": "array",
       "items": [{ "$ref": "#/definitions/address"}]
