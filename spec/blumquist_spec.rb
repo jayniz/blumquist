@@ -21,12 +21,13 @@ describe Blumquist do
       expect(b.current_address.city).to eq "Berlin"
     end
 
-    it "has getters for arrays of non primitives" do
+    it "has getters for arrays of references" do
       expect(b.old_addresses[1].street_address).to eq "Bluecherstr. 22"
     end
 
-    it "has getters for arrays of primitives" do
-      expect(b.phone_numbers[0]).to eq 5551234
+    it "has getters for arrays of objects" do
+      expect(b.phone_numbers[0].prefix).to eq 555
+      expect(b.phone_numbers[0].extension).to eq 1234
     end
 
     context "oneOf expressions" do

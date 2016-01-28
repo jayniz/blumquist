@@ -187,6 +187,16 @@ class Blumquist
       @data[property] = @data[property].map do |item|
         Blumquist.new(schema: sub_schema, data: item, validate: @validate)
       end
+    elsif type_def[:type] == 'object'
+      sub_schema = type_def.merge(
+        definitions: @schema[:definitions]
+      )
+
+      @data[property] ||= []
+      @data[property] = @data[property].map do |item|
+        Blumquist.new(schema: sub_schema, data: item, validate: @validate)
+      end
+
     elsif primitive_type?(type_def[:type])
 
     # We don't know what to do, so let's panic

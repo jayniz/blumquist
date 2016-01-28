@@ -1,3 +1,6 @@
+# 0.4.1
+- Fix broken arrays of objects
+
 # 0.4.0
 - Support properties with multiple types
   (e.g. an object, but also null)

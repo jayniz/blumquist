@@ -1,6 +1,6 @@
 {
   "name": "Moviepilot, Inc.",
-  "phone_numbers": [5551234],
+  "phone_numbers": [{"prefix": 555, "extension": 1234}],
   "current_address": {
     "street_address": "Friedrichstr. 58",
     "city": "Berlin",

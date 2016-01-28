@@ -19,7 +19,7 @@
     "name": { "type": "string" },
     "phone_numbers": {
       "type": "array",
-      "items": [{ "type": "number" }]
+      "items": [{ "type": "object", "properties": { "prefix": {"type" :"number"}, "extension": {"type": "number"} }}]
     },
     "current_address": {
       "oneOf": [
