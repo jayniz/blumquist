@@ -1,3 +1,6 @@
+# 0.4.2
+- Allow type arrays with just one element
+
 # 0.4.1
 - Fix broken arrays of objects
 
