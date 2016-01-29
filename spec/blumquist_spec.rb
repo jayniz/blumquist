@@ -11,7 +11,7 @@ describe Blumquist do
     let(:support) { File.expand_path("../support", __FILE__) }
     let(:schema) { JSON.parse(open(File.join(support, 'schema.json')).read) }
     let(:data) { JSON.parse(open(File.join(support, 'data.json')).read) }
-    let(:b){ Blumquist.new(schema: schema, data: data) }
+    let(:b) { Blumquist.new(schema: schema, data: data) }
 
     it "has getters for direct properties" do
       expect(b.name).to eq "Moviepilot, Inc."
@@ -32,7 +32,7 @@ describe Blumquist do
 
     context "oneOf expressions" do
       it "with inline objects" do
-        data = {"current_address" => { "planet" => "οὐρανός" }}
+        data = {"current_address" => {"planet" => "οὐρανός"}}
         blumquist = Blumquist.new(schema: schema, data: data)
         expect(blumquist.current_address.planet).to eq "οὐρανός"
       end
@@ -45,14 +45,14 @@ describe Blumquist do
     end
 
     context "validation" do
-      let(:invalid_data){
+      let(:invalid_data) {
         invalid = JSON.parse(data.to_json)
         invalid['name'] = 1
         invalid
       }
 
       it "is on by default" do
-        expect{
+        expect {
           Blumquist.new(schema: schema, data: invalid_data)
         }.to raise_error(JSON::Schema::ValidationError)
       end
@@ -60,6 +60,17 @@ describe Blumquist do
       it "can be switched off" do
         b = Blumquist.new(schema: schema, data: invalid_data, validate: false)
         expect(b.name).to eq 1
+      end
+
+      it "correctly validate sub schema with an object property" do
+        # Converting properties of type 'object' seem to have an array as schema-type (like '[object]')
+        # ensure, that creating a Blumquist object from such a property works as expected
+        # Blumquist.new() had a problem validating such a schema.
+        event_schema=JSON.parse(open(File.join(support, 'event_schema.json')).read)
+        data = JSON.parse('{"event":{"type":"edward.comment"}}')
+        expect {
+          Blumquist.new(schema: event_schema, data: data)
+        }.to_not raise_error
       end
 
     end

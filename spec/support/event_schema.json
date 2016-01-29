@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "properties": {
+    "event": {
+      "type": [
+        "object"
+      ],
+      "description": "",
+      "properties": {
+        "type": {
+          "type": [
+            "string"
+          ],
+          "description": ""
+        }
+      }
+    }
+  },
+  "required": [
+    "event"
+  ],
+  "definitions": {
+    "notification": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "type": [
+            "object"
+          ],
+          "description": "",
+          "properties": {
+            "type": {
+              "type": [
+                "string"
+              ],
+              "description": ""
+            }
+          }
+        }
+      },
+      "required": [
+        "event"
+      ]
+    }
+  }
+}

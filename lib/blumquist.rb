@@ -64,7 +64,7 @@ class Blumquist
 
       # Wrap objects recursively
       if type == 'object' || type_def[:oneOf]
-        blumquistify_object(property)
+        @data[property] = blumquistify_property(property)
 
       # Turn array elements into Blumquists
       elsif type == 'array'
@@ -91,19 +91,47 @@ class Blumquist
     end
   end
 
-  def blumquistify_object(property)
+  def blumquistify_property(property)
     sub_schema = @schema[:properties][property].merge(
       definitions: @schema[:definitions]
     )
+    data = @data[property]
+    blumquistify_object(schema: sub_schema, data: data)
+  end
+
+  def blumquistify_object(options)
+    sub_schema = options[:schema]
+    data = options[:data]
 
     # If properties are defined directly, like this:
     #
     #     { "type": "object", "properties": { ... } }
     #
     if sub_schema[:properties]
-      sub_blumquist = Blumquist.new(schema: sub_schema, data: @data[property], validate: @validate)
-      @data[property] = sub_blumquist
-      return
+      if sub_schema[:type].is_a?(String)
+        sub_blumquist = Blumquist.new(schema: sub_schema, data: data, validate: false)
+        return sub_blumquist
+      end
+
+      # If the type is an array, we can't make much of it
+      # because we wouldn't know which type to model as a
+      # blumquist object. Unless, of course, it's one object
+      # and one or more primitives.
+      if sub_schema[:type].is_a?(Array)
+
+        # It's an array but only contains one allowed type,
+        # this is easy.
+        if sub_schema[:type].length == 1
+          sub_schema[:type] = sub_schema[:type].first
+          sub_blumquist = Blumquist.new(schema: sub_schema, data: data, validate: false)
+          return sub_blumquist
+        end
+
+        # We can implement the other cases at a leter point.
+      end
+
+      # We shouldn't arrive here
+      raise(Errors::UnsupportedType, sub_schema)
     end
 
     # Properties not defined directly, object must be 'oneOf',
@@ -113,7 +141,9 @@ class Blumquist
     #
     # The json schema v4 draft specifies, that:
     #
-    #    "the oneOf keyword is new in draft v4; its value is an array of schemas, and an instance is valid if and only if it is valid against exactly one of these schemas"
+    #    "the oneOf keyword is new in draft v4; its value is an array of
+    #    schemas, and an instance is valid if and only if it is valid
+    #    against exactly one of these schemas"
     #
     # *See: http://json-schema.org/example2.html
     #
@@ -133,8 +163,7 @@ class Blumquist
                 definitions: @schema[:definitions]
               )
             end
-            @data[property] = Blumquist.new(data: @data[property], schema: schema)
-            return
+            return Blumquist.new(data: data, schema: schema, validate: true)
           end
         rescue
           # On to the next oneOf
@@ -144,12 +173,10 @@ class Blumquist
       # We found no matching object definition.
       # If a primitve is part of the `oneOfs,
       # that's no problem though.
-      return if primitive_allowed
+      return data if primitive_allowed
 
       # We didn't find a schema in oneOf that matches our data
-      raise(Errors::NoCompatibleOneOf, one_ofs: sub_schema[:oneOf], data: @data[property])
-
-      return
+      raise(Errors::NoCompatibleOneOf, one_ofs: sub_schema[:oneOf], data: data)
     end
 
     # If there's neither `properties` nor `oneOf`, we don't
@@ -185,16 +212,16 @@ class Blumquist
 
       @data[property] ||= []
       @data[property] = @data[property].map do |item|
-        Blumquist.new(schema: sub_schema, data: item, validate: @validate)
+        Blumquist.new(schema: sub_schema, data: item, validate: false)
       end
-    elsif type_def[:type] == 'object'
+    elsif type_def[:type] == 'object' || type_def[:oneOf]
       sub_schema = type_def.merge(
         definitions: @schema[:definitions]
       )
 
       @data[property] ||= []
       @data[property] = @data[property].map do |item|
-        Blumquist.new(schema: sub_schema, data: item, validate: @validate)
+        blumquistify_object(schema: sub_schema, data: item)
       end
 
     elsif primitive_type?(type_def[:type])
