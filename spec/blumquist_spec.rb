@@ -62,7 +62,7 @@ describe Blumquist do
         expect(b.name).to eq 1
       end
 
-      it "should validate simple spec" do
+      it "correctly validate sub schema with an object property" do
         # Converting properties of type 'object' seem to have an array as schema-type (like '[object]')
         # ensure, that creating a Blumquist object from such a property works as expected
         # Blumquist.new() had a problem validating such a schema.
