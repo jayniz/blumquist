@@ -64,7 +64,7 @@ class Blumquist
 
       # Wrap objects recursively
       if type == 'object' || type_def[:oneOf]
-        blumquistify_object(property)
+        @data[property] = blumquistify_property(property)
 
       # Turn array elements into Blumquists
       elsif type == 'array'
@@ -91,19 +91,25 @@ class Blumquist
     end
   end
 
-  def blumquistify_object(property)
+  def blumquistify_property(property)
     sub_schema = @schema[:properties][property].merge(
       definitions: @schema[:definitions]
     )
+    data = @data[property]
+    blumquistify_object(schema: sub_schema, data: data)
+  end
+
+  def blumquistify_object(options)
+    sub_schema = options[:schema]
+    data = options[:data]
 
     # If properties are defined directly, like this:
     #
     #     { "type": "object", "properties": { ... } }
     #
     if sub_schema[:properties]
-      sub_blumquist = Blumquist.new(schema: sub_schema, data: @data[property], validate: @validate)
-      @data[property] = sub_blumquist
-      return
+      sub_blumquist = Blumquist.new(schema: sub_schema, data: data, validate: @validate)
+      return sub_blumquist
     end
 
     # Properties not defined directly, object must be 'oneOf',
@@ -133,8 +139,7 @@ class Blumquist
                 definitions: @schema[:definitions]
               )
             end
-            @data[property] = Blumquist.new(data: @data[property], schema: schema)
-            return
+            return Blumquist.new(data: data, schema: schema)
           end
         rescue
           # On to the next oneOf
@@ -147,9 +152,7 @@ class Blumquist
       return if primitive_allowed
 
       # We didn't find a schema in oneOf that matches our data
-      raise(Errors::NoCompatibleOneOf, one_ofs: sub_schema[:oneOf], data: @data[property])
-
-      return
+      raise(Errors::NoCompatibleOneOf, one_ofs: sub_schema[:oneOf], data: data)
     end
 
     # If there's neither `properties` nor `oneOf`, we don't
@@ -187,14 +190,14 @@ class Blumquist
       @data[property] = @data[property].map do |item|
         Blumquist.new(schema: sub_schema, data: item, validate: @validate)
       end
-    elsif type_def[:type] == 'object'
+    elsif type_def[:type] == 'object' || type_def[:oneOf]
       sub_schema = type_def.merge(
         definitions: @schema[:definitions]
       )
 
       @data[property] ||= []
       @data[property] = @data[property].map do |item|
-        Blumquist.new(schema: sub_schema, data: item, validate: @validate)
+        blumquistify_object(schema: sub_schema, data: item)
       end
 
     elsif primitive_type?(type_def[:type])
