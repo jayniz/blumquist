@@ -63,8 +63,9 @@ describe Blumquist do
       end
 
       it "should validate simple spec" do
-        # the event object inside is a property of type '[object]' which fails
-        # in blumquistify_property() because of the array type
+        # Converting properties of type 'object' seem to have an array as schema-type (like '[object]')
+        # ensure, that creating a Blumquist object from such a property works as expected
+        # Blumquist.new() had a problem validating such a schema.
         event_schema=JSON.parse(open(File.join(support, 'event_schema.json')).read)
         data = JSON.parse('{"event":{"type":"edward.comment"}}')
         expect {
