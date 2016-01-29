@@ -96,6 +96,7 @@ class Blumquist
       definitions: @schema[:definitions]
     )
     data = @data[property]
+    sub_schema[:type] = [sub_schema[:type]].flatten.first
     blumquistify_object(schema: sub_schema, data: data)
   end
 
