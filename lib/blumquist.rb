@@ -224,7 +224,7 @@ class Blumquist
         blumquistify_object(schema: sub_schema, data: item)
       end
 
-    elsif primitive_type?(type_def[:type]) || primitive_type?(type_def[:type].flatten.first)
+    elsif primitive_type?(type_def[:type]) || (type_def[:type].length == 1 && primitive_type?(type_def[:type].flatten.first))
 
     # We don't know what to do, so let's panic
     else
