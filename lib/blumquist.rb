@@ -214,6 +214,8 @@ class Blumquist
       @data[property] = @data[property].map do |item|
         Blumquist.new(schema: sub_schema, data: item, validate: false)
       end
+
+    # The items are objects, defined directly or through oneOf
     elsif type_def[:type] == 'object' || type_def[:oneOf]
       sub_schema = type_def.merge(
         definitions: @schema[:definitions]
@@ -224,7 +226,15 @@ class Blumquist
         blumquistify_object(schema: sub_schema, data: item)
       end
 
-    elsif primitive_type?(type_def[:type]) || (type_def[:type].length == 1 && primitive_type?(type_def[:type].flatten.first))
+    # The items are all of the same primitive type
+    elsif primitive_type?(type_def[:type])
+
+    # The items might all be primitives, that would be OK
+    elsif type_def[:type].is_a?(Array)
+      type_def[:type].each do |t|
+        next if primitive_type?(t)
+        raise(Errors::UnsupportedType, type_def[:type]) unless all_primitive
+      end
 
     # We don't know what to do, so let's panic
     else
