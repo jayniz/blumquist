@@ -54,13 +54,11 @@ class Blumquist
 
   def define_getters
     @schema[:properties].each do |property, type_def|
+      # The type_def can contain one or more types.
+      # We only support multiple primitive types, or one
+      # normal type and the null type.
       types = [type_def[:type]].flatten - ["null"]
       type = types.first
-
-      # The type_def can contain one or more types.
-      # We only support single types, or one
-      # normal type and the null type.
-      raise(Errors::UnsupportedType, type_def[:type]) if types.length > 1
 
       # Wrap objects recursively
       if type == 'object' || type_def[:oneOf]
@@ -72,6 +70,8 @@ class Blumquist
 
       # Nothing to do for primitive values
       elsif primitive_type?(type)
+
+      elsif all_primitive_types(type_def[:type])
 
       # We don't know what to do, so let's panic
       else
@@ -230,15 +230,16 @@ class Blumquist
     elsif primitive_type?(type_def[:type])
 
     # The items might all be primitives, that would be OK
-    elsif type_def[:type].is_a?(Array)
-      type_def[:type].each do |t|
-        next if primitive_type?(t)
-        raise(Errors::UnsupportedType, type_def[:type]) unless all_primitive
-      end
+    elsif all_primitive_types(type_def[:type])
 
     # We don't know what to do, so let's panic
     else
       raise(Errors::UnsupportedType, type_def[:type])
     end
+  end
+
+  def all_primitive_types(types)
+    return false unless types.is_a?(Array)
+    types.all? { |t| primitive_type?(t) }
   end
 end
