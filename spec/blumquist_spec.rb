@@ -73,6 +73,16 @@ describe Blumquist do
         }.to_not raise_error
       end
 
+      it "correctly validates an array of numbers property" do
+        event_schema=JSON.parse(open(File.join(support, "array_schema.json")).read)
+        data = JSON.parse('{"mentions":[0,1,99,3,4]}')
+        expect {
+          blumquist_object = Blumquist.new(schema: event_schema, data: data)
+          expect(blumquist_object.mentions[2]).to eq 99
+        }.to_not raise_error
+
+      end
+
     end
 
 
