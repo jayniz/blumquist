@@ -75,14 +75,30 @@ describe Blumquist do
 
       it "correctly validates an array of numbers property" do
         event_schema=JSON.parse(open(File.join(support, "array_schema.json")).read)
-        data = JSON.parse('{"mentions":[0,1,99,3,4]}')
+        data = JSON.parse('{"an_array":[0,1,99,3,4]}')
         expect {
           blumquist_object = Blumquist.new(schema: event_schema, data: data)
-          expect(blumquist_object.mentions[2]).to eq 99
+          expect(blumquist_object.an_array[2]).to eq 99
         }.to_not raise_error
-
       end
 
+      it "correctly validates a nullable array of numbers" do
+        event_schema=JSON.parse(open(File.join(support, "array_schema_nullable.json")).read)
+        data = JSON.parse('{"an_array_nullable": [0,1,99,3,4]}')
+        expect {
+          blumquist_object = Blumquist.new(schema: event_schema, data: data)
+          expect(blumquist_object.an_array_nullable[2]).to eq 99
+        }.to_not raise_error
+      end
+
+      it "correctly validates a nullable array of numbers that is null" do
+        event_schema=JSON.parse(open(File.join(support, "array_schema_nullable.json")).read)
+        data = JSON.parse('{"an_array_nullable": null}')
+        expect {
+          blumquist_object = Blumquist.new(schema: event_schema, data: data)
+          expect(blumquist_object.an_array_nullable).to eq nil
+        }.to_not raise_error
+      end
     end
 
 
