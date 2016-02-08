@@ -201,6 +201,8 @@ class Blumquist
     #     "items": [{ "type": "number" }]
     #
     type_def = [@schema[:properties][property][:items]].flatten.first
+    types = [type_def[:type]].flatten - ["null"]
+    type = types.first
 
     # The items of this array are defined by a pointer
     if type_def[:$ref]
@@ -214,7 +216,7 @@ class Blumquist
       @data[property] = @data[property].map do |item|
         Blumquist.new(schema: sub_schema, data: item, validate: false)
       end
-    elsif type_def[:type] == 'object' || type_def[:oneOf]
+    elsif type == 'object' || type_def[:oneOf]
       sub_schema = type_def.merge(
         definitions: @schema[:definitions]
       )
@@ -224,7 +226,7 @@ class Blumquist
         blumquistify_object(schema: sub_schema, data: item)
       end
 
-    elsif primitive_type?(type_def[:type]) || (type_def[:type].length == 1 && primitive_type?(type_def[:type].flatten.first))
+    elsif primitive_type?(type)
 
     # We don't know what to do, so let's panic
     else

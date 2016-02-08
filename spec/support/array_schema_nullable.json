@@ -11,7 +11,8 @@
             "items": [
                 {
                     "type": [
-                        "number"
+                        "number",
+                        "null"
                     ]
                 }
             ]
