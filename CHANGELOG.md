@@ -1,5 +1,8 @@
+# 0.4.3
+- Allow arrays with single-array-types
+
 # 0.4.2
-- Allow type arrays with just one element
+- Allow objects with single-array-types
 
 # 0.4.1
 - Fix broken arrays of objects
