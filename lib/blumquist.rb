@@ -71,7 +71,7 @@ class Blumquist
       # Nothing to do for primitive values
       elsif primitive_type?(type)
 
-      elsif all_primitive_types(type_def[:type])
+      elsif all_primitive_types(types)
 
       # We don't know what to do, so let's panic
       else
