@@ -1,3 +1,6 @@
+# 0.4.4
+- No changes, 0.4.3 seems stuck in limbo w/ rubygems/cloudfront
+
 # 0.4.3
 - Allow arrays with single-array-types
 
