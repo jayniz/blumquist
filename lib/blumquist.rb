@@ -18,6 +18,10 @@ class Blumquist
     define_getters
   end
 
+  def to_s
+    inspect
+  end
+
   private
 
   def validate_data

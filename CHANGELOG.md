@@ -1,3 +1,6 @@
+# 0.5.0
+- Make `Blumquist#to_s` do an `inspect`
+
 # 0.4.4
 - No changes, 0.4.3 seems stuck in limbo w/ rubygems/cloudfront
 
