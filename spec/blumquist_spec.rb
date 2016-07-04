@@ -42,6 +42,12 @@ describe Blumquist do
         blumquist = Blumquist.new(schema: schema, data: data)
         expect(blumquist.current_address).to be_nil
       end
+
+      it "with primitives allowed in an array but only non matching objects contained" do
+        schema = {"type" => "object", "properties": { "oo": {"type": "array", "items": {"oneOf": [{"type": "null"}]}}}}
+        data = {"oo" => [{"invalid" => "object"}]}
+        Blumquist.new(schema: schema, data: data, validate: false)
+      end
     end
 
     context "validation" do
@@ -54,7 +60,7 @@ describe Blumquist do
       it "is on by default" do
         expect {
           Blumquist.new(schema: schema, data: invalid_data)
-        }.to raise_error(JSON::Schema::ValidationError)
+        }.to raise_error(Blumquist::Errors::ValidationError)
       end
 
       it "can be switched off" do

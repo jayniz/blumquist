@@ -26,7 +26,9 @@ class Blumquist
 
   def validate_data
     return unless @validate
-    JSON::Validator.validate!(@schema, @data)
+    errors = JSON::Validator.fully_validate(@schema, @data)
+    return true if errors.length == 0
+    raise(Errors::ValidationError, [errors, @schema, @data])
   end
 
   def validate_schema
@@ -54,6 +56,16 @@ class Blumquist
 
   def primitive_type?(type)
     %w{null boolean number string}.include? type.to_s
+  end
+
+  def value_is_of_primitive_type?(value, type)
+    case type
+    when 'null'    then value.nil?
+    when 'boolean' then value === true or value === false
+    when 'number'  then value.is_a?(Numeric)
+    when 'string'  then value.is_a?(String)
+    else false
+    end
   end
 
   def define_getters
@@ -177,6 +189,11 @@ class Blumquist
       # We found no matching object definition.
       # If a primitve is part of the `oneOfs,
       # that's no problem though.
+      #
+      # TODOs this is only ok if data is actually of that primitive type
+      #
+      # Also check https://gist.github.com/jayniz/e8849ea528af6d205698 and
+      # https://github.com/ruby-json-schema/json-schema/issues/319
       return data if primitive_allowed
 
       # We didn't find a schema in oneOf that matches our data
