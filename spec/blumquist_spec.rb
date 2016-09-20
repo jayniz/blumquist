@@ -22,7 +22,7 @@ describe Blumquist do
     end
 
     it "has getters for arrays of references" do
-      expect(b.old_addresses[1].street_address).to eq "Bluecherstr. 22"
+      expect(b.old_addresses[2].street_address).to eq "Bluecherstr. 22"
     end
 
     it "has getters for arrays of objects" do

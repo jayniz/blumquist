@@ -2,11 +2,16 @@
   "name": "Moviepilot, Inc.",
   "phone_numbers": [{"prefix": 555, "extension": 1234}],
   "current_address": {
-    "street_address": "Friedrichstr. 58",
+    "street_address": "Chausseestr. 111",
     "city": "Berlin",
     "state": "Berlin"
   },
   "old_addresses": [
+    {
+      "street_address": "Friedrichstr. 58",
+      "city": "Berlin",
+      "state": "Berlin"
+    },
     {
       "street_address": "Mehringdamm 33",
       "city": "Berlin",
