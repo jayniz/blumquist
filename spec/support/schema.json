@@ -16,7 +16,7 @@
   "type": "object",
 
   "properties": {
-    "name": { "type": "string" },
+    "name": { "type": "string", "maxLength": 16 },
     "phone_numbers": {
       "type": "array",
       "items": [{ "type": "object", "properties": { "prefix": {"type" :"number"}, "extension": {"type": "number"} }}]

@@ -30,7 +30,20 @@ describe Blumquist do
       expect(b.phone_numbers[0].extension).to eq 1234
     end
 
+    let(:invalid_data_name_too_long) {
+      invalid = JSON.parse(data.to_json)
+      invalid['name'] = "Moviepilot GmbH, Moviepilot, Inc."
+      invalid
+    }
+
+    it "supports maxLength on strings" do
+      expect {
+        Blumquist.new(schema: schema, data: invalid_data_name_too_long, validate: true)
+      }.to raise_error(Blumquist::Errors::ValidationError)
+    end
+
     context "oneOf expressions" do
+
       it "with inline objects" do
         data = {"current_address" => {"planet" => "οὐρανός"}}
         blumquist = Blumquist.new(schema: schema, data: data)
@@ -51,7 +64,8 @@ describe Blumquist do
     end
 
     context "validation" do
-      let(:invalid_data) {
+
+      let(:invalid_data_name_as_number) {
         invalid = JSON.parse(data.to_json)
         invalid['name'] = 1
         invalid
@@ -59,12 +73,12 @@ describe Blumquist do
 
       it "is on by default" do
         expect {
-          Blumquist.new(schema: schema, data: invalid_data)
+          Blumquist.new(schema: schema, data: invalid_data_name_as_number)
         }.to raise_error(Blumquist::Errors::ValidationError)
       end
 
       it "can be switched off" do
-        b = Blumquist.new(schema: schema, data: invalid_data, validate: false)
+        b = Blumquist.new(schema: schema, data: invalid_data_name_as_number, validate: false)
         expect(b.name).to eq 1
       end
 
