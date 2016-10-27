@@ -104,7 +104,22 @@ describe Blumquist do
       end
 
     end
+  end
 
+  context 'object serialization' do
+    let(:support) { File.expand_path("../support", __FILE__) }
+    let(:schema) { JSON.parse(open(File.join(support, 'schema.json')).read) }
+    let(:data) { JSON.parse(open(File.join(support, 'data.json')).read) }
+    let(:b) { Blumquist.new(schema: schema, data: data) }
 
+    it 'serializes the object to binary' do
+      expect { Marshal.dump(b) }.to_not raise_error
+    end
+
+    it 'deserializes the binary string to a blumquist object' do
+      binary = Marshal.dump(b)
+      loaded_blumquist = Marshal.load(binary)
+      expect(loaded_blumquist.to_s.gsub(/Blumquist:([^\s]+)/, '')).to eq(b.to_s.gsub(/Blumquist:([^\s]+)/, ''))
+    end
   end
 end

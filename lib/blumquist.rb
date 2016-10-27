@@ -22,6 +22,14 @@ class Blumquist
     inspect
   end
 
+  def marshal_dump
+    [@schema, @data, @validate]
+  end
+
+  def marshal_load(array)
+    @schema, @data, @validate = array
+  end
+
   private
 
   def validate_data
