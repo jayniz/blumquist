@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'pry'
 
 describe Blumquist do
   it 'has a version number' do
@@ -104,7 +105,30 @@ describe Blumquist do
       end
 
     end
+  end
 
+  context 'object serialization' do
+    let(:support) { File.expand_path("../support", __FILE__) }
+    let(:schema) { JSON.parse(open(File.join(support, 'schema.json')).read) }
+    let(:data) { JSON.parse(open(File.join(support, 'data.json')).read) }
+    let(:b) { Blumquist.new(schema: schema, data: data) }
 
+    it 'serializes the object to binary' do
+      expect { Marshal.dump(b) }.to_not raise_error
+    end
+
+    it 'deserializes the binary string to a blumquist object' do
+      binary = Marshal.dump(b)
+      loaded_blumquist = Marshal.load(binary)
+      expect(loaded_blumquist.name).to eq(b.name)
+      expect(loaded_blumquist.phone_numbers.map { |p| p.prefix }).to eq(b.phone_numbers.map { |p| p.prefix })
+      expect(loaded_blumquist.phone_numbers.map { |p| p.extension }).to eq(b.phone_numbers.map { |p| p.extension })
+      expect(loaded_blumquist.current_address.street_address).to eq(b.current_address.street_address)
+      expect(loaded_blumquist.current_address.city).to eq(b.current_address.city)
+      expect(loaded_blumquist.current_address.state).to eq(b.current_address.state)
+      expect(loaded_blumquist.old_addresses.map { |o| o.street_address }).to eq(b.old_addresses.map { |o| o.street_address })
+      expect(loaded_blumquist.old_addresses.map { |o| o.city }).to eq(b.old_addresses.map { |o| o.city })
+      expect(loaded_blumquist.old_addresses.map { |o| o.state }).to eq(b.old_addresses.map { |o| o.state })
+    end
   end
 end
