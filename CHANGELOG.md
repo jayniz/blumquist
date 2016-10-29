@@ -1,3 +1,6 @@
+# 0.6.0
+- Add marshalling support
+
 # 0.5.0
 - Make `Blumquist#to_s` do an `inspect`
 
