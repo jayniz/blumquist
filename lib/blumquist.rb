@@ -190,6 +190,10 @@ class Blumquist
             return Blumquist.new(data: data, schema: schema, validate: true)
           end
         rescue
+          # The data doesn't match this oneOf, but we declare the getters
+          # anyway, but as the blumquist could have these fields the getter
+          # should be available
+          one[:properties].each_key { |name| define_getter(name) }
           # On to the next oneOf
         end
       end
