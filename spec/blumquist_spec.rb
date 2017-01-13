@@ -52,13 +52,6 @@ describe Blumquist do
         expect(blumquist.current_address.planet).to eq "οὐρανός"
       end
 
-      it "defines getters for all oneOfs, even if they do not appear in the data" do
-        data = { "name" => { "first_name" => "Mario" } }
-        blumquist = Blumquist.new(schema: oneOf_schema, data: data, validate: true)
-        expect(blumquist.name).to respond_to(:first_name)
-        expect(blumquist.name).to respond_to(:middle_name)
-      end
-
       it "with null objects" do
         data = {"current_address" => nil}
         blumquist = Blumquist.new(schema: schema, data: data)
@@ -69,6 +62,18 @@ describe Blumquist do
         schema = {"type" => "object", "properties": { "oo": {"type": "array", "items": {"oneOf": [{"type": "null"}]}}}}
         data = {"oo" => [{"invalid" => "object"}]}
         Blumquist.new(schema: schema, data: data, validate: false)
+      end
+
+      context "with oneOfs references that do not appear in the data" do
+        let(:blumquist) do
+          data = { "name" => { "first_name" => "Mario" } }
+          Blumquist.new(schema: oneOf_schema, data: data, validate: true)
+        end
+
+        it "defines getters for all oneOfs" do
+          expect(blumquist.name).to respond_to(:first_name)
+          expect(blumquist.name).to respond_to(:middle_name)
+        end
       end
     end
 
