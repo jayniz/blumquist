@@ -11,6 +11,7 @@ describe Blumquist do
   context 'generating getters' do
     let(:support) { File.expand_path("../support", __FILE__) }
     let(:schema) { JSON.parse(open(File.join(support, 'schema.json')).read) }
+    let(:oneOf_schema) { JSON.parse(open(File.join(support, 'oneOf_schema.json')).read) }
     let(:data) { JSON.parse(open(File.join(support, 'data.json')).read) }
     let(:b) { Blumquist.new(schema: schema, data: data) }
 
@@ -61,6 +62,24 @@ describe Blumquist do
         schema = {"type" => "object", "properties": { "oo": {"type": "array", "items": {"oneOf": [{"type": "null"}]}}}}
         data = {"oo" => [{"invalid" => "object"}]}
         Blumquist.new(schema: schema, data: data, validate: false)
+      end
+
+      context "with oneOfs references that do not appear in the data" do
+        let(:blumquist) do
+          data = { "name" => { "first_name" => "Mario", "last_name" => 'M' } }
+          Blumquist.new(schema: oneOf_schema, data: data, validate: true)
+        end
+
+        it "defines getters for all oneOfs" do
+          expect(blumquist.name).to respond_to(:first_name)
+          expect(blumquist.name).to respond_to(:maid_name)
+          expect(blumquist.name).to respond_to(:last_name)
+          expect(blumquist.name).to respond_to(:middle_name)
+        end
+
+        it "does not overwrite the getters data" do
+          expect(blumquist.name.last_name).to eq 'M'
+        end
       end
     end
 

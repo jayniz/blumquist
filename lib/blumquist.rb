@@ -175,6 +175,7 @@ class Blumquist
     # the first that matches:
     if sub_schema[:oneOf]
       primitive_allowed = false
+      matching_oneOf = nil
       sub_schema[:oneOf].each do |one|
         begin
           if primitive_type?(one[:type])
@@ -187,12 +188,17 @@ class Blumquist
                 definitions: @schema[:definitions]
               )
             end
-            return Blumquist.new(data: data, schema: schema, validate: true)
+            matching_oneOf = Blumquist.new(data: data, schema: schema, validate: true)
           end
         rescue
+          # The data doesn't match this oneOf, but we declare the getters
+          # anyway, but as the blumquist could have these fields the getter
+          # should be available
+          one[:properties].each_key { |name| define_getter(name) }
           # On to the next oneOf
         end
       end
+      return matching_oneOf if matching_oneOf
 
       # We found no matching object definition.
       # If a primitve is part of the `oneOfs,
