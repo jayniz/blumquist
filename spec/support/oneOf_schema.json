@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+
+  "definitions": {
+    "old_fields": {
+      "type": "object",
+      "properties": {
+        "middle_name": { "type": "string" }
+      },
+      "required": ["middle_name"]
+    }
+  },
+
+  "type": "object",
+
+  "properties": {
+    "name": {
+      "oneOf": [
+        { "type": "null" },
+        {"$ref": "#/definitions/old_fields" },
+        {
+          "type": "object",
+          "properties": {
+            "first_name": { "type" : "string" }
+          },
+          "required": ["first_name"]
+        }
+      ]
+    } 
+  }
+}

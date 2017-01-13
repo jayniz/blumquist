@@ -11,6 +11,7 @@ describe Blumquist do
   context 'generating getters' do
     let(:support) { File.expand_path("../support", __FILE__) }
     let(:schema) { JSON.parse(open(File.join(support, 'schema.json')).read) }
+    let(:oneOf_schema) { JSON.parse(open(File.join(support, 'oneOf_schema.json')).read) }
     let(:data) { JSON.parse(open(File.join(support, 'data.json')).read) }
     let(:b) { Blumquist.new(schema: schema, data: data) }
 
@@ -49,6 +50,13 @@ describe Blumquist do
         data = {"current_address" => {"planet" => "οὐρανός"}}
         blumquist = Blumquist.new(schema: schema, data: data)
         expect(blumquist.current_address.planet).to eq "οὐρανός"
+      end
+
+      it "defines getters for all oneOfs, even if they do not appear in the data" do
+        data = { "name" => { "first_name" => "Mario" } }
+        blumquist = Blumquist.new(schema: oneOf_schema, data: data, validate: true)
+        expect(blumquist.name).to respond_to(:first_name)
+        expect(blumquist.name).to respond_to(:middle_name)
       end
 
       it "with null objects" do
