@@ -5,9 +5,18 @@
     "old_fields": {
       "type": "object",
       "properties": {
-        "middle_name": { "type": "string" }
+        "middle_name": { "type": "string" },
+        "last_name": { "type": "string" }
       },
       "required": ["middle_name"]
+    },
+    "with_extra_fields": {
+      "type": "object",
+      "properties": {
+        "maid_name": { "type": "string" },
+        "last_name": { "type": "string" }
+      },
+      "required": ["maiden_name"]
     }
   },
 
@@ -17,14 +26,16 @@
     "name": {
       "oneOf": [
         { "type": "null" },
-        {"$ref": "#/definitions/old_fields" },
+        {"$ref": "#/definitions/with_extra_fields" },
         {
           "type": "object",
           "properties": {
-            "first_name": { "type" : "string" }
+            "first_name": { "type" : "string" },
+            "last_name": { "type" : "string" }
           },
           "required": ["first_name"]
-        }
+        },
+        {"$ref": "#/definitions/old_fields" }
       ]
     } 
   }

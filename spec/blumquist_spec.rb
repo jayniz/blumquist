@@ -66,13 +66,19 @@ describe Blumquist do
 
       context "with oneOfs references that do not appear in the data" do
         let(:blumquist) do
-          data = { "name" => { "first_name" => "Mario" } }
+          data = { "name" => { "first_name" => "Mario", "last_name" => 'M' } }
           Blumquist.new(schema: oneOf_schema, data: data, validate: true)
         end
 
         it "defines getters for all oneOfs" do
           expect(blumquist.name).to respond_to(:first_name)
+          expect(blumquist.name).to respond_to(:maid_name)
+          expect(blumquist.name).to respond_to(:last_name)
           expect(blumquist.name).to respond_to(:middle_name)
+        end
+
+        it "does not overwrite the getters data" do
+          expect(blumquist.name.last_name).to eq 'M'
         end
       end
     end
