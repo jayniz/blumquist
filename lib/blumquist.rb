@@ -5,11 +5,14 @@ require 'json-schema'
 require 'blumquist/errors'
 
 class Blumquist
+  attr_reader :_type
+
   def initialize(options)
     # Poor man's deep clone: json 🆗 🆒
     @data = JSON.parse(options.fetch(:data).to_json)
     @schema = options.fetch(:schema).with_indifferent_access
     @validate = options.fetch(:validate, true)
+    @_type = type_from_type_def(options[:reference])
 
     validate_schema
     validate_data
@@ -176,6 +179,7 @@ class Blumquist
     if sub_schema[:oneOf]
       primitive_allowed = false
       sub_schema[:oneOf].each do |one|
+        original_type_def = one.dup
         begin
           if primitive_type?(one[:type])
             primitive_allowed = true
@@ -187,7 +191,7 @@ class Blumquist
                 definitions: @schema[:definitions]
               )
             end
-            return Blumquist.new(data: data, schema: schema, validate: true)
+            return Blumquist.new(data: data, schema: schema, validate: true, reference: original_type_def)
           end
         rescue
           # On to the next oneOf
@@ -212,6 +216,11 @@ class Blumquist
     # know what to do and shall panic:
     raise(Errors::MissingProperties, sub_schema)
   end
+  
+  def type_from_type_def(type_def)
+    return 'object' unless type_def.is_a?(Hash) && type_def.has_key?(:$ref)
+    type_def[:$ref].split("/").last
+  end
 
   def blumquistify_array(property)
     # We only support arrays with one type defined, either through
@@ -233,6 +242,7 @@ class Blumquist
 
     # The items of this array are defined by a pointer
     if type_def[:$ref]
+      original_type_def = type_def.dup
       item_schema = resolve_json_pointer!(type_def)
 
       sub_schema = item_schema.merge(
@@ -241,7 +251,7 @@ class Blumquist
 
       @data[property] ||= []
       @data[property] = @data[property].map do |item|
-        Blumquist.new(schema: sub_schema, data: item, validate: false)
+        sub_blumquist = Blumquist.new(schema: sub_schema, data: item, validate: false, reference: original_type_def)
       end
 
     # The items are objects, defined directly or through oneOf

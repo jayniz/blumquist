@@ -7,13 +7,29 @@ describe Blumquist do
     expect(Blumquist::VERSION).not_to be nil
   end
 
+  let(:support) { File.expand_path("../support", __FILE__) }
+  let(:schema) { JSON.parse(open(File.join(support, 'schema.json')).read) }
+  let(:data) { JSON.parse(open(File.join(support, 'data.json')).read) }
+  let(:b) { Blumquist.new(schema: schema, data: data) }
+
+
+  context '#_type' do
+    it 'returns the oneOf type' do
+      expect(b.current_address._type). to eq 'address'
+    end
+
+    it 'returns the type for array of references' do
+      expect(b.old_addresses[1]._type).to eq 'address' 
+    end
+
+    it 'returns object for inline objects' do
+      data = {"current_address" => {"planet" => "οὐρανός"}}
+      b = Blumquist.new(schema: schema, data: data)
+      expect(b.current_address._type).to eq 'object' 
+    end
+  end
 
   context 'generating getters' do
-    let(:support) { File.expand_path("../support", __FILE__) }
-    let(:schema) { JSON.parse(open(File.join(support, 'schema.json')).read) }
-    let(:data) { JSON.parse(open(File.join(support, 'data.json')).read) }
-    let(:b) { Blumquist.new(schema: schema, data: data) }
-
     it "has getters for direct properties" do
       expect(b.name).to eq "Moviepilot, Inc."
     end
@@ -108,11 +124,6 @@ describe Blumquist do
   end
 
   context 'object serialization' do
-    let(:support) { File.expand_path("../support", __FILE__) }
-    let(:schema) { JSON.parse(open(File.join(support, 'schema.json')).read) }
-    let(:data) { JSON.parse(open(File.join(support, 'data.json')).read) }
-    let(:b) { Blumquist.new(schema: schema, data: data) }
-
     it 'serializes the object to binary' do
       expect { Marshal.dump(b) }.to_not raise_error
     end
