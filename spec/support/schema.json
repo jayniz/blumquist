@@ -36,6 +36,9 @@
       "type": "array",
       "items": [{ "type": "object", "properties": { "prefix": {"type" :"number"}, "extension": {"type": "number"} }}]
     },
+    "parents_address": {
+      "$ref": "#/definitions/address"
+    },
     "current_address": {
       "oneOf": [
         { "type": "null" },

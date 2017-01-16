@@ -35,6 +35,18 @@ describe Blumquist do
       expect(b.relatives.first._type).to eq "ancestor"
       expect(b.relatives.last._type).to eq "sibling"
     end
+
+    it 'can handle direct references' do
+      parents_address = { "parents_address" =>  {
+                            "street_address" => "Chauseestr. 111",
+                            "city" => "Berlin",
+                            "state" => "Berlin",
+                           } 
+                        }
+      new_data = data.merge(parents_address)
+      b = Blumquist.new(schema: schema, data: new_data)
+      expect(b.parents_address._type).to eq "address"
+    end
   end
 
   context 'generating getters' do

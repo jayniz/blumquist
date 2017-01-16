@@ -11,6 +11,7 @@ class Blumquist
     # Poor man's deep clone: json 🆗 🆒
     @data = JSON.parse(options.fetch(:data).to_json)
     @schema = options.fetch(:schema).with_indifferent_access
+    @original_properties = options.fetch(:schema).with_indifferent_access[:properties]
     @validate = options.fetch(:validate, true)
     @_type = 'object'
 
@@ -95,13 +96,15 @@ class Blumquist
       type = types.first
 
       # Wrap objects recursively
-      if type == 'object' || type_def[:oneOf]
+      if type == 'object' 
+        sub_blumquist = blumquistify_property(property)
+        sub_blumquist._type = type_name_for(property)
+        @data[property] = sub_blumquist
+      elsif type_def[:oneOf]
         @data[property] = blumquistify_property(property)
-
       # Turn array elements into Blumquists
       elsif type == 'array'
         blumquistify_array(property)
-
       # Nothing to do for primitive values
       elsif primitive_type?(type)
 
@@ -285,6 +288,10 @@ class Blumquist
     else
       raise(Errors::UnsupportedType, type_def[:type])
     end
+  end
+
+  def type_name_for(property)
+    type_from_type_def(@original_properties[property])
   end
 
   def all_primitive_types(types)
