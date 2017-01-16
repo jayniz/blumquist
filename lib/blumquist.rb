@@ -54,6 +54,13 @@ class Blumquist
     end
   end
 
+  def resolve_json_pointer(type_def)
+    key = type_def[:$ref].split('/').last
+    definition = @schema[:definitions][key]
+    raise(Errors::InvalidPointer, pointer) unless definition
+    type_def.merge(definition)
+  end
+
   def resolve_json_pointer!(type_def)
     # Should read up on how json pointers are really resolved
     pointer = type_def.delete(:$ref)
@@ -179,7 +186,6 @@ class Blumquist
     if sub_schema[:oneOf]
       primitive_allowed = false
       sub_schema[:oneOf].each do |one|
-        oneOf_type = type_from_type_def(one)
         begin
           if primitive_type?(one[:type])
             primitive_allowed = true
@@ -187,12 +193,12 @@ class Blumquist
             if one[:type]
               schema = one.merge(definitions: @schema[:definitions])
             else
-              schema = resolve_json_pointer!(one).merge(
+              schema = resolve_json_pointer(one).merge(
                 definitions: @schema[:definitions]
               )
             end
             sub_blumquist = Blumquist.new(data: data, schema: schema, validate: true)
-            sub_blumquist._type = oneOf_type
+            sub_blumquist._type = type_from_type_def(one)
             return sub_blumquist
           end
         rescue
