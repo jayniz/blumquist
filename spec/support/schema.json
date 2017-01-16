@@ -10,6 +10,21 @@
         "state":          { "type": ["string", "null"] }
       },
       "required": ["street_address", "city", "state"]
+    },
+    "sibling": {
+      "type": "object",
+      "properties": {
+        "age_difference": { "type": "number" },
+        "name":           { "type": "string" }
+      },
+      "required": ["age_difference", "name"]
+    },
+    "ancestor": {
+      "type": "object",
+      "properties": {
+        "family_name":      { "type": "string" }
+      },
+      "required": ["family_name"]
     }
   },
 
@@ -33,6 +48,19 @@
           "required": ["planet"]
         }
       ]
+    },
+    "relatives": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/sibling"
+          },
+          {
+            "$ref": "#/definitions/ancestor"
+          }
+        ]
+      }
     },
     "old_addresses": {
       "type": "array",
