@@ -17,7 +17,7 @@
         "age_difference": { "type": "number" },
         "name":           { "type": "string" }
       },
-      "required": ["age_difference", "name"]
+      "required": ["age_difference"]
     },
     "ancestor": {
       "type": "object",

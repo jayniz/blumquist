@@ -27,6 +27,14 @@ describe Blumquist do
       b = Blumquist.new(schema: schema, data: data)
       expect(b.current_address._type).to eq 'object' 
     end
+
+    it 'can handle multi-type arrays' do
+      relatives = { "relatives" => [{"family_name" => 'Foo'}, {"age_difference" => 7}] }
+      new_data = data.merge(relatives)
+      b = Blumquist.new(schema: schema, data: new_data)
+      expect(b.relatives.first._type).to eq "ancestor"
+      expect(b.relatives.last._type).to eq "sibling"
+    end
   end
 
   context 'generating getters' do
