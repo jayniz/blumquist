@@ -12,7 +12,7 @@ class Blumquist
     @data = JSON.parse(options.fetch(:data).to_json)
     @schema = options.fetch(:schema).with_indifferent_access
     @validate = options.fetch(:validate, true)
-    @_type = type_from_type_def(options[:reference])
+    @_type = 'object'
 
     validate_schema
     validate_data
@@ -179,7 +179,7 @@ class Blumquist
     if sub_schema[:oneOf]
       primitive_allowed = false
       sub_schema[:oneOf].each do |one|
-        original_type_def = one.dup
+        oneOf_type = type_from_type_def(one)
         begin
           if primitive_type?(one[:type])
             primitive_allowed = true
@@ -191,7 +191,9 @@ class Blumquist
                 definitions: @schema[:definitions]
               )
             end
-            return Blumquist.new(data: data, schema: schema, validate: true, reference: original_type_def)
+            sub_blumquist = Blumquist.new(data: data, schema: schema, validate: true)
+            sub_blumquist._type = oneOf_type
+            return sub_blumquist
           end
         rescue
           # On to the next oneOf
@@ -242,7 +244,7 @@ class Blumquist
 
     # The items of this array are defined by a pointer
     if type_def[:$ref]
-      original_type_def = type_def.dup
+      reference_type = type_from_type_def(type_def)
       item_schema = resolve_json_pointer!(type_def)
 
       sub_schema = item_schema.merge(
@@ -251,7 +253,9 @@ class Blumquist
 
       @data[property] ||= []
       @data[property] = @data[property].map do |item|
-        sub_blumquist = Blumquist.new(schema: sub_schema, data: item, validate: false, reference: original_type_def)
+        sub_blumquist = Blumquist.new(schema: sub_schema, data: item, validate: false)
+        sub_blumquist._type = reference_type
+        sub_blumquist
       end
 
     # The items are objects, defined directly or through oneOf
@@ -280,5 +284,11 @@ class Blumquist
   def all_primitive_types(types)
     return false unless types.is_a?(Array)
     types.all? { |t| primitive_type?(t) }
+  end
+
+  protected 
+
+  def _type=(_type)
+    @_type = _type
   end
 end
