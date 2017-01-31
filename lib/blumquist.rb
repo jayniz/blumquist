@@ -13,7 +13,6 @@ class Blumquist
     @schema = options.fetch(:schema).with_indifferent_access
     @original_properties = options.fetch(:schema).with_indifferent_access[:properties]
     @validate = options.fetch(:validate, true)
-    @_type = 'object'
 
     validate_schema
     validate_data
@@ -96,15 +95,13 @@ class Blumquist
       type = types.first
 
       # Wrap objects recursively
-      if type == 'object' 
-        sub_blumquist = blumquistify_property(property)
-        sub_blumquist._type = type_name_for(property)
-        @data[property] = sub_blumquist
-      elsif type_def[:oneOf]
+      if type == 'object' || type_def[:oneOf]
         @data[property] = blumquistify_property(property)
+
       # Turn array elements into Blumquists
       elsif type == 'array'
         blumquistify_array(property)
+
       # Nothing to do for primitive values
       elsif primitive_type?(type)
 
@@ -133,7 +130,10 @@ class Blumquist
       definitions: @schema[:definitions]
     )
     data = @data[property]
-    blumquistify_object(schema: sub_schema, data: data)
+    sub_blumquist = blumquistify_object(schema: sub_schema, data: data)
+    # In case of oneOf the definition was already set
+    sub_blumquist._type = type_name_for(property) if sub_blumquist && sub_blumquist._type.nil?
+    sub_blumquist
   end
 
   def blumquistify_object(options)
