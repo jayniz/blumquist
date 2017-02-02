@@ -5,10 +5,13 @@ require 'json-schema'
 require 'blumquist/errors'
 
 class Blumquist
+  attr_reader :_type
+
   def initialize(options)
     # Poor man's deep clone: json 🆗 🆒
     @data = JSON.parse(options.fetch(:data).to_json)
     @schema = options.fetch(:schema).with_indifferent_access
+    @original_properties = options.fetch(:schema).with_indifferent_access[:properties]
     @validate = options.fetch(:validate, true)
 
     validate_schema
@@ -49,6 +52,13 @@ class Blumquist
       next unless type_def[:$ref]
       resolve_json_pointer!(type_def)
     end
+  end
+
+  def resolve_json_pointer(type_def)
+    key = type_def[:$ref].split('/').last
+    definition = @schema[:definitions][key]
+    raise(Errors::InvalidPointer, pointer) unless definition
+    type_def.merge(definition)
   end
 
   def resolve_json_pointer!(type_def)
@@ -120,7 +130,10 @@ class Blumquist
       definitions: @schema[:definitions]
     )
     data = @data[property]
-    blumquistify_object(schema: sub_schema, data: data)
+    sub_blumquist = blumquistify_object(schema: sub_schema, data: data)
+    # In case of oneOf the definition was already set
+    sub_blumquist._type = type_name_for(property) if sub_blumquist && sub_blumquist._type.nil?
+    sub_blumquist
   end
 
   def blumquistify_object(options)
@@ -183,11 +196,13 @@ class Blumquist
             if one[:type]
               schema = one.merge(definitions: @schema[:definitions])
             else
-              schema = resolve_json_pointer!(one).merge(
+              schema = resolve_json_pointer(one).merge(
                 definitions: @schema[:definitions]
               )
             end
-            return Blumquist.new(data: data, schema: schema, validate: true)
+            sub_blumquist = Blumquist.new(data: data, schema: schema, validate: true)
+            sub_blumquist._type = type_from_type_def(one)
+            return sub_blumquist
           end
         rescue
           # On to the next oneOf
@@ -212,6 +227,11 @@ class Blumquist
     # know what to do and shall panic:
     raise(Errors::MissingProperties, sub_schema)
   end
+  
+  def type_from_type_def(type_def)
+    return 'object' unless type_def.is_a?(Hash) && type_def.has_key?(:$ref)
+    type_def[:$ref].split("/").last
+  end
 
   def blumquistify_array(property)
     # We only support arrays with one type defined, either through
@@ -233,6 +253,7 @@ class Blumquist
 
     # The items of this array are defined by a pointer
     if type_def[:$ref]
+      reference_type = type_from_type_def(type_def)
       item_schema = resolve_json_pointer!(type_def)
 
       sub_schema = item_schema.merge(
@@ -241,7 +262,9 @@ class Blumquist
 
       @data[property] ||= []
       @data[property] = @data[property].map do |item|
-        Blumquist.new(schema: sub_schema, data: item, validate: false)
+        sub_blumquist = Blumquist.new(schema: sub_schema, data: item, validate: false)
+        sub_blumquist._type = reference_type
+        sub_blumquist
       end
 
     # The items are objects, defined directly or through oneOf
@@ -267,8 +290,18 @@ class Blumquist
     end
   end
 
+  def type_name_for(property)
+    type_from_type_def(@original_properties[property])
+  end
+
   def all_primitive_types(types)
     return false unless types.is_a?(Array)
     types.all? { |t| primitive_type?(t) }
+  end
+
+  protected 
+
+  def _type=(_type)
+    @_type = _type
   end
 end
