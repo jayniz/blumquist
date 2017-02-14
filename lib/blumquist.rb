@@ -33,6 +33,12 @@ class Blumquist
     @schema, @data, @validate = array
   end
 
+  def ==(other)
+    self.class == other.class && other.marshal_dump == marshal_dump
+  end
+
+  alias_method :eql?, :==
+
   private
 
   def validate_data

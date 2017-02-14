@@ -162,4 +162,18 @@ describe Blumquist do
       expect(loaded_blumquist.old_addresses.map { |o| o.state }).to eq(b.old_addresses.map { |o| o.state })
     end
   end
+
+  context 'object comparison' do
+    it 'is equal with another object with the same schema and data' do
+      a = Blumquist.new(data: data, schema: schema)
+      b = Blumquist.new(data: data, schema: schema)
+      expect(a).to be_eql(b)
+    end
+    it 'is not equal if the data are different' do
+      different_data = {"current_address" => {"planet" => "οὐρανός"}}
+      a = Blumquist.new(data: data, schema: schema)
+      b = Blumquist.new(data: different_data, schema: schema)
+      expect(a).to_not be_eql(b)
+    end
+  end
 end
