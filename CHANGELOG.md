@@ -1,3 +1,6 @@
+# 0.7.0
+- Add object equality comparison
+
 # 0.6.0
 - Add marshalling support
 
