@@ -33,6 +33,12 @@ class Blumquist
     @schema, @data, @validate = array
   end
 
+  def ==(other)
+    self.class == other.class && other.marshal_dump == marshal_dump
+  end
+
+  alias_method :eql?, :==
+
   private
 
   def validate_data
@@ -227,7 +233,7 @@ class Blumquist
     # know what to do and shall panic:
     raise(Errors::MissingProperties, sub_schema)
   end
-  
+
   def type_from_type_def(type_def)
     return 'object' unless type_def.is_a?(Hash) && type_def.has_key?(:$ref)
     type_def[:$ref].split("/").last
@@ -299,7 +305,7 @@ class Blumquist
     types.all? { |t| primitive_type?(t) }
   end
 
-  protected 
+  protected
 
   def _type=(_type)
     @_type = _type

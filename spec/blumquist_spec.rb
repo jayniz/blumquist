@@ -19,13 +19,13 @@ describe Blumquist do
     end
 
     it 'returns the type for array of references' do
-      expect(b.old_addresses[1]._type).to eq 'address' 
+      expect(b.old_addresses[1]._type).to eq 'address'
     end
 
     it 'returns object for inline objects' do
       data = {"current_address" => {"planet" => "οὐρανός"}}
       b = Blumquist.new(schema: schema, data: data)
-      expect(b.current_address._type).to eq 'object' 
+      expect(b.current_address._type).to eq 'object'
     end
 
     it 'can handle multi-type arrays' do
@@ -41,7 +41,7 @@ describe Blumquist do
                             "street_address" => "Chauseestr. 111",
                             "city" => "Berlin",
                             "state" => "Berlin",
-                           } 
+                           }
                         }
       new_data = data.merge(parents_address)
       b = Blumquist.new(schema: schema, data: new_data)
@@ -160,6 +160,20 @@ describe Blumquist do
       expect(loaded_blumquist.old_addresses.map { |o| o.street_address }).to eq(b.old_addresses.map { |o| o.street_address })
       expect(loaded_blumquist.old_addresses.map { |o| o.city }).to eq(b.old_addresses.map { |o| o.city })
       expect(loaded_blumquist.old_addresses.map { |o| o.state }).to eq(b.old_addresses.map { |o| o.state })
+    end
+  end
+
+  context 'object comparison' do
+    it 'is equal with another object with the same schema and data' do
+      a = Blumquist.new(data: data, schema: schema)
+      b = Blumquist.new(data: data, schema: schema)
+      expect(a).to be_eql(b)
+    end
+    it 'is not equal if the data are different' do
+      different_data = {"current_address" => {"planet" => "οὐρανός"}}
+      a = Blumquist.new(data: data, schema: schema)
+      b = Blumquist.new(data: different_data, schema: schema)
+      expect(a).to_not be_eql(b)
     end
   end
 end
