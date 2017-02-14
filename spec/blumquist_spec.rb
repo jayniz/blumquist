@@ -19,13 +19,13 @@ describe Blumquist do
     end
 
     it 'returns the type for array of references' do
-      expect(b.old_addresses[1]._type).to eq 'address' 
+      expect(b.old_addresses[1]._type).to eq 'address'
     end
 
     it 'returns object for inline objects' do
       data = {"current_address" => {"planet" => "οὐρανός"}}
       b = Blumquist.new(schema: schema, data: data)
-      expect(b.current_address._type).to eq 'object' 
+      expect(b.current_address._type).to eq 'object'
     end
 
     it 'can handle multi-type arrays' do
@@ -41,7 +41,7 @@ describe Blumquist do
                             "street_address" => "Chauseestr. 111",
                             "city" => "Berlin",
                             "state" => "Berlin",
-                           } 
+                           }
                         }
       new_data = data.merge(parents_address)
       b = Blumquist.new(schema: schema, data: new_data)
