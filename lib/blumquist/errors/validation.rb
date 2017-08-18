@@ -2,7 +2,7 @@ class Blumquist
   module Errors
     class ValidationError < Blumquist::Error
       def initialize(errors)
-        super(errors.to_json)
+        super(JSON.pretty_generate(JSON.parse(errors.to_json)))
       end
     end
   end
