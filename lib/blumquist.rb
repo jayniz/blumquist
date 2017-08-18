@@ -45,7 +45,7 @@ class Blumquist
     return unless @validate
     errors = JSON::Validator.fully_validate(@schema, @data)
     return true if errors.length == 0
-    raise(Errors::ValidationError, [errors, @schema, @data])
+    raise(Errors::ValidationError, [errors.map { |e| e.split("\n") }, @data])
   end
 
   def validate_schema
