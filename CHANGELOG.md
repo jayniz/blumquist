@@ -1,3 +1,6 @@
+# 0.8.0
+- Make error messages look better with json pretty print
+
 # 0.7.0
 - Add object equality comparison
 
