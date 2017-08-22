@@ -28,12 +28,21 @@ describe Blumquist do
       expect(b.current_address._type).to eq 'object'
     end
 
-    it 'can handle multi-type arrays' do
-      relatives = { "relatives" => [{"family_name" => 'Foo'}, {"age_difference" => 7}] }
-      new_data = data.merge(relatives)
-      b = Blumquist.new(schema: schema, data: new_data)
-      expect(b.relatives.first._type).to eq "ancestor"
-      expect(b.relatives.last._type).to eq "sibling"
+    context 'with multi-type arrays' do
+      it 'works' do
+        relatives = { "relatives" => [{"family_name" => 'Foo'}, {"age_difference" => 7}] }
+        new_data = data.merge(relatives)
+        b = Blumquist.new(schema: schema, data: new_data)
+        expect(b.relatives.first._type).to eq "ancestor"
+        expect(b.relatives.last._type).to eq "sibling"
+      end
+
+      it 'works with an enum specifying the type' do
+        work_contacts = { "work_contacts" => [{"@type" => 'phone', "num" => 7322}] }
+        new_data = data.merge(work_contacts)
+        b = Blumquist.new(schema: schema, data: new_data)
+        expect(b.work_contacts.first.num).to eq 7322
+      end
     end
 
     it 'can handle direct references' do

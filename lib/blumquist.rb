@@ -79,17 +79,7 @@ class Blumquist
   end
 
   def primitive_type?(type)
-    %w{null boolean number string}.include? type.to_s
-  end
-
-  def value_is_of_primitive_type?(value, type)
-    case type
-    when 'null'    then value.nil?
-    when 'boolean' then value === true or value === false
-    when 'number'  then value.is_a?(Numeric)
-    when 'string'  then value.is_a?(String)
-    else false
-    end
+    %w{null boolean number string enum}.include? type.to_s
   end
 
   def define_getters
