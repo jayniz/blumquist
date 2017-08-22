@@ -1,3 +1,6 @@
+# 0.9.0
+- Allow enums
+
 # 0.8.0
 - Make error messages look better with json pretty print
 
