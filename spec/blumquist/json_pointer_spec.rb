@@ -7,7 +7,7 @@ RSpec.describe Blumquist::JSONPointer do
   subject { described_class.new(uri, document: document).value }
 
   describe '#value' do
-    context 'valid pointer path' do
+    context 'valid pointer uri' do
       context 'points to current document' do
         let(:uri)  { '#/properties/phone_numbers/items' }
 
@@ -21,7 +21,7 @@ RSpec.describe Blumquist::JSONPointer do
       end
     end
 
-    context 'invalid pointer path' do
+    context 'invalid pointer uri' do
       context 'not supported pointer' do
         let(:uri)  { '/properties/phone_numbers/items' }
 
