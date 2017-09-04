@@ -14,7 +14,7 @@
     "sibling": {
       "type": "object",
       "properties": {
-        "age_difference": { "type": "number" },
+        "age_difference": { "type": "integer" },
         "name":           { "type": "string" }
       },
       "required": ["age_difference"]
