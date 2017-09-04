@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'pry'
 
-describe Blumquist do
+RSpec.describe Blumquist do
   it 'has a version number' do
     expect(Blumquist::VERSION).not_to be nil
   end
@@ -11,7 +11,6 @@ describe Blumquist do
   let(:schema) { JSON.parse(open(File.join(support, 'schema.json')).read) }
   let(:data) { JSON.parse(open(File.join(support, 'data.json')).read) }
   let(:b) { Blumquist.new(schema: schema, data: data) }
-
 
   context '#_type' do
     it 'returns the oneOf type' do
