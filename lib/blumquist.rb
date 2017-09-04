@@ -79,7 +79,7 @@ class Blumquist
   end
 
   def primitive_type?(type)
-    %w{null boolean number string enum}.include? type.to_s
+    %w{null boolean number string enum integer}.include?(type.to_s)
   end
 
   def define_getters
