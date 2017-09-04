@@ -1,3 +1,6 @@
+# [0.9.1] - 2017-09-04 Alfonso Mancilla (#20)
+- Support primitive type: integer.
+
 # 0.9.0
 - Allow enums
 
