@@ -112,7 +112,12 @@ class Blumquist
   end
 
   def define_getter(property)
-    self.class.class_eval do
+    #
+    # Inheritance:
+    # Define methods under the Blumquist namespace
+    # to allow subclasses to overwrite methods.
+    #
+    Blumquist.class_eval do
       define_method(property) do
         @data[property]
       end
