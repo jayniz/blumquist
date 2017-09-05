@@ -1,4 +1,4 @@
-# encoding: utf-8
+require_relative 'support/blumquist_child'
 require 'spec_helper'
 require 'pry'
 
@@ -182,6 +182,16 @@ RSpec.describe Blumquist do
       a = Blumquist.new(data: data, schema: schema)
       b = Blumquist.new(data: different_data, schema: schema)
       expect(a).to_not be_eql(b)
+    end
+  end
+
+  describe 'inheritance' do
+    context 'Blumquist used as parent class' do
+      subject { BlumquistChild.new(schema: schema, data: data).name }
+
+      it 'subclasses can overwrite methods' do
+        expect(subject).to eq('Moviepilot, Inc. OVERWRITTEN')
+      end
     end
   end
 end
