@@ -1,4 +1,8 @@
-# [0.10.0] - 2017-09-05
+# [0.10.1] - 2017-09-05 Alfonso Mancilla (#23)
+## Changed
+- Inheritance: Allow subsclasses to overwrite methods.
+
+# [0.10.0] - 2017-09-05 Alfonso Mancilla (#22)
 ## Added
 - References ($ref):
   Support for more JSON pointers formats:
