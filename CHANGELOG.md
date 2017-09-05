@@ -1,3 +1,11 @@
+# [0.10.0] - 2017-09-05
+## Added
+- References ($ref):
+  Support for more JSON pointers formats:
+    1. #/key1/key2/.../keyN
+    2. path-to-file.json
+    3. path-to-file.json#/key1/key2/.../keyN
+
 # [0.9.1] - 2017-09-04 Alfonso Mancilla (#20)
 - Support primitive type: integer.
 
