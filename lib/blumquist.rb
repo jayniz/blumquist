@@ -2,9 +2,12 @@ require 'blumquist/version'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'json'
 require 'json-schema'
+require 'blumquist/json_pointer'
 require 'blumquist/errors'
 
 class Blumquist
+  PRIMITIVE_TYPES = %w{null boolean number string enum integer}.freeze
+
   attr_reader :_type
 
   def initialize(options)
@@ -61,25 +64,20 @@ class Blumquist
   end
 
   def resolve_json_pointer(type_def)
-    key = type_def[:$ref].split('/').last
-    definition = @schema[:definitions][key]
-    raise(Errors::InvalidPointer, pointer) unless definition
-    type_def.merge(definition)
+    pointer = JSONPointer.new(type_def[:$ref], document: @schema)
+
+    type_def.merge(pointer.value)
   end
 
   def resolve_json_pointer!(type_def)
-    # Should read up on how json pointers are really resolved
-    pointer = type_def.delete(:$ref)
-    key = pointer.split('/').last
-    definition = @schema[:definitions][key]
+    pointer_path = type_def.delete(:$ref)
+    pointer = JSONPointer.new(pointer_path, document: @schema)
 
-    raise(Errors::InvalidPointer, pointer) unless definition
-
-    type_def.merge! definition
+    type_def.merge!(pointer.value)
   end
 
   def primitive_type?(type)
-    %w{null boolean number string enum integer}.include?(type.to_s)
+    PRIMITIVE_TYPES.include?(type.to_s)
   end
 
   def define_getters

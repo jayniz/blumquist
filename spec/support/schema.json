@@ -80,13 +80,13 @@
     }
   },
 
+  "title": "Company",
   "type": "object",
-
   "properties": {
     "name": { "type": "string", "maxLength": 16 },
     "phone_numbers": {
       "type": "array",
-      "items": [{ "type": "object", "properties": { "prefix": {"type" :"number"}, "extension": {"type": "number"} }}]
+      "items": [{"$ref": "spec/support/phone_number_schema.json"}]
     },
     "parents_address": {
       "$ref": "#/definitions/address"
@@ -94,7 +94,7 @@
     "current_address": {
       "oneOf": [
         { "type": "null" },
-        {"$ref": "#/definitions/address" },
+        { "$ref": "#/definitions/address" },
         {
           "type": "object",
           "properties": {
